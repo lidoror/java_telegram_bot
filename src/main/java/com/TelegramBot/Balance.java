@@ -16,9 +16,7 @@ public class Balance {
         balance += Double.parseDouble(num);
 
     }
-    public void setSalary(double salary){
-        this.salary = Math.abs(salary);
-    }
+
     public String getSalary(){
         return String.valueOf(salary);
     }

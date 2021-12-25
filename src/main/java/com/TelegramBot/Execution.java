@@ -10,6 +10,7 @@ public class Execution {
     String[] messageSplitter;
     CustomKeyboard keyboard = new CustomKeyboard();
     Balance balance = new Balance();
+    Company company = new Company();
 
     Execution (){}
 
@@ -40,6 +41,7 @@ public class Execution {
             case "balance"->
                     message.setText(balance.getSaving());
 
+
             default -> message.setText("We are very sorry, this function is not working yet.");
 
 
@@ -47,22 +49,24 @@ public class Execution {
 
         try {
 
-            if(command.contains(" ") && command.contains("-")){
-                balance.addToBalance(getPrice(command));
-                message.setText("Refunded from balance");
+            if(command.contains(" ") && command.contains("-") && company.getList().contains(getCompany(command))){
+                if (isNumeric(getPrice(command))) {
+                    balance.addToBalance(getPrice(command));
+                    message.setText("Refunded from balance");
+                }
 
-            }else if (command.contains(" ") && command.contains("Salary")){
-                String[] salary =  command.split(" ");
-                balance.setSalary(Double.parseDouble(salary[1]));
-                message.setText("Salary has been set");
-
-
-            }else if (command.contains(" ")) {
-                balance.addToBalance(getPrice(command));
-                message.setText("Added to balance.");
-
-            }else
-                message.setText("We are very sorry, this function is not working yet.");
+            }else if (command.contains(" ") && company.getList().contains(getCompany(command))) {
+                if (isNumeric(getPrice(command))) {
+                    balance.addToBalance(getPrice(command));
+                    message.setText("Added to balance.");
+                    System.out.println(
+                            "product: " + getProduct(command)+
+                                    "\nprice: " + getPrice(command)+
+                                    "\ncompany: " + getCompany(command)+
+                                    "\nnote: " + getNote(command)
+                    );
+                }
+            }
 
         }catch (NumberFormatException e){
             message.setText("incorrect input");
@@ -91,10 +95,20 @@ public class Execution {
         return messageSplitter[2];
     }
 
-
-
-    public boolean isNumeric(String str){
+    private boolean isNumeric(String str){
         return NumberUtils.isNumber(str);
     }
+
+    private StringBuilder getNote(String note){
+        messageSplitter = note.split(" ");
+        StringBuilder comment = new StringBuilder(" ");
+        for (int i = 3; i < messageSplitter.length; i++) {
+            comment.append(messageSplitter[i]);
+            comment.append(" ");
+        }
+        return comment;
+    }
+
+
 }
 
