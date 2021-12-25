@@ -18,7 +18,6 @@ public class CustomKeyboard {
         row.add("Balance");
         row.add("Expenses");
         row.add("Refund");
-
         keyboard.add(row);
 
     row = new KeyboardRow();
