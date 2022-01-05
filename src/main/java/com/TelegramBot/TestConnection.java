@@ -11,6 +11,7 @@ public class TestConnection {
         db.checkLidorConnection();
         System.out.println("connected");
         }catch (SQLException e){
+            System.out.println("-------Not Connected----");
             System.out.println( e.getMessage());
         }
     }

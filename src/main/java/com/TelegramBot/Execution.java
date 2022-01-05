@@ -40,7 +40,11 @@ public class Execution {
 
             case "balance"->
                     message.setText(balance.getSaving());
-
+            case "overall expenses" ->
+                    message.setText("not supported yet");
+            case "administration.control.panel" ->
+                    message.setText("this function in work");
+            
 
             default -> message.setText("We are very sorry, this function is not working yet.");
 
@@ -67,13 +71,17 @@ public class Execution {
                     );
                 }
             }
+            
 
         }catch (NumberFormatException e){
             message.setText("incorrect input");
             System.out.println("Execution Exception\n" + e.getMessage());
+        }catch(ArrayIndexOutOfBoundsException e){
+            message.setText("Incorrect input");
+            System.out.println("ArrayIndexOutOfBoundsException");
+        }catch(Exception e){
+            System.out.println("exception");
         }
-
-
 
     }
 

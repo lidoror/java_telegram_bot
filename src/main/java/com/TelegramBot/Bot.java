@@ -21,12 +21,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        SendMessage message = new SendMessage();
         Execution exe = new Execution();
         String command = update.getMessage().getText();
-        SendMessage message = new SendMessage();
-        exe.messageHandler(command, message);
-
         message.setChatId(String.valueOf(update.getMessage().getChatId()));
+        exe.messageHandler(command, message);
         try {
             execute(message);
         } catch (TelegramApiException e) {
