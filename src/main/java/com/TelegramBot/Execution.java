@@ -11,18 +11,46 @@ public class Execution {
     CustomKeyboard keyboard = new CustomKeyboard();
     Balance balance = new Balance();
     Company company = new Company();
+    InlineKeyboard inLine = new InlineKeyboard();
 
     Execution (){}
-
+    
     public void messageHandler(String command, SendMessage message) {
+        try {
+    
+            if(command.contains(" ") && command.contains("-") && company.getList().contains(getCompany(command))){
+                if (isNumeric(getPrice(command))) {
+                    balance.addToBalance(getPrice(command));
+                    message.setText("Refunded from balance");
+                }
+    
+            }else if (command.contains(" ") && company.getList().contains(getCompany(command))) {
+                if (isNumeric(getPrice(command))) {
+                    balance.addToBalance(getPrice(command));
+                    message.setText("Added to balance.");
+                    
+                }
+            }
+            
+    
+        }catch (NumberFormatException e){
+            message.setText("incorrect input");
+            System.out.println("Execution Exception\n" + e.getMessage());
+        }catch(ArrayIndexOutOfBoundsException e){
+            message.setText("Incorrect input");
+            System.out.println("ArrayIndexOutOfBoundsException");
+        }catch(Exception e){
+            System.out.println("exception");
+        }
 
         switch (command.toLowerCase(Locale.ROOT)) {
+
             case "start"->{
                 message.setText("Hi this is an expenses manager bot" +
                         "\nplease choose an option:");
                 keyboard.keyboard1(message);
-
             }
+
             case "expenses" ->{
                 message.setText("Please enter an expense" +
                         "\nenter the expense in this order \nproduct->price->company");
@@ -35,52 +63,25 @@ public class Execution {
             }
             case "b"->
                     message.setText(balance.getBalance());
+
             case "s" ->
                     message.setText(balance.getSalary());
 
+
             case "balance"->
                     message.setText(balance.getSaving());
+
             case "overall expenses" ->
                     message.setText("not supported yet");
-            case "administration.control.panel" ->
-                    message.setText("this function in work");
-            
+
+
+           case "admin.center.control" -> {
+               message.setText("choose an option: ");
+               inLine.adminKeyboard(message);
+           }
 
             default -> message.setText("We are very sorry, this function is not working yet.");
 
-
-        }
-
-        try {
-
-            if(command.contains(" ") && command.contains("-") && company.getList().contains(getCompany(command))){
-                if (isNumeric(getPrice(command))) {
-                    balance.addToBalance(getPrice(command));
-                    message.setText("Refunded from balance");
-                }
-
-            }else if (command.contains(" ") && company.getList().contains(getCompany(command))) {
-                if (isNumeric(getPrice(command))) {
-                    balance.addToBalance(getPrice(command));
-                    message.setText("Added to balance.");
-                    System.out.println(
-                            "product: " + getProduct(command)+
-                                    "\nprice: " + getPrice(command)+
-                                    "\ncompany: " + getCompany(command)+
-                                    "\nnote: " + getNote(command)
-                    );
-                }
-            }
-            
-
-        }catch (NumberFormatException e){
-            message.setText("incorrect input");
-            System.out.println("Execution Exception\n" + e.getMessage());
-        }catch(ArrayIndexOutOfBoundsException e){
-            message.setText("Incorrect input");
-            System.out.println("ArrayIndexOutOfBoundsException");
-        }catch(Exception e){
-            System.out.println("exception");
         }
 
     }
@@ -106,7 +107,8 @@ public class Execution {
     private boolean isNumeric(String str){
         return NumberUtils.isNumber(str);
     }
-
+    
+    @NotNull
     private StringBuilder getNote(String note){
         messageSplitter = note.split(" ");
         StringBuilder comment = new StringBuilder(" ");

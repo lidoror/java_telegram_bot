@@ -1,7 +1,7 @@
 package com.TelegramBot;
 
 public class Balance {
-    private double salary = 7500;
+    private double salary = 8900;
     private static double balance;
 
     public String getSaving(){
