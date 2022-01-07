@@ -23,8 +23,17 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         SendMessage message = new SendMessage();
         Execution exe = new Execution();
-        String command = update.getMessage().getText();
-        message.setChatId(String.valueOf(update.getMessage().getChatId()));
+        String command;
+
+        if (update.getMessage() != null) {
+            command = update.getMessage().getText();
+            message.setChatId(String.valueOf(update.getMessage().getChatId()));
+        }
+        else {
+            command = update.getCallbackQuery().getData();
+            message.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+        }
+
         exe.messageHandler(command, message);
         try {
             execute(message);

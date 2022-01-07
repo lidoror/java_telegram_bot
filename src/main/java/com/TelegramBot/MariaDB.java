@@ -30,7 +30,6 @@ public class MariaDB {
         boolean isValid = connection.isValid(2);
         connection.close();
         return isValid;
-        
     }
     
 }

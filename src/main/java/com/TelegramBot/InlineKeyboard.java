@@ -21,11 +21,11 @@ public class InlineKeyboard {
         List<InlineKeyboardButton> button = new ArrayList<>();
         List<InlineKeyboardButton> buttonRow2 = new ArrayList<>();
 
-        InlineKeyboardButton youtube = new InlineKeyboardButton("ChatID");
+        InlineKeyboardButton chatID = new InlineKeyboardButton("ChatID");
 
-        youtube.setCallbackData(message.getChatId());
+        chatID.setCallbackData("SendChatId " + message.getChatId());
 
-        button.add(youtube);
+        button.add(chatID);
 
         InlineKeyboardButton github = new InlineKeyboardButton("github");
 
