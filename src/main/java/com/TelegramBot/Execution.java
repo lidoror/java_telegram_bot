@@ -63,8 +63,8 @@ public class Execution {
 
         try {
 
-            if(command.contains("SendChatId")){
-                message.setText(command.split(" ")[1]);
+            if(command.contains("SendChatId-")){
+                message.setText(command.split("-")[1]);
                 return;
             }
 
@@ -131,6 +131,7 @@ public class Execution {
                 "\ncompany: " + getCompany(str) +
                 "\nNote: "  + getNote(str);
     }
+
 
 
 }

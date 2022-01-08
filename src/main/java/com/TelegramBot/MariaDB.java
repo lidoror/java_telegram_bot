@@ -31,5 +31,13 @@ public class MariaDB {
         connection.close();
         return isValid;
     }
+
+    public void readFromDB(){
+
+    }
+
+    public void writeToDB(){
+
+    }
     
 }

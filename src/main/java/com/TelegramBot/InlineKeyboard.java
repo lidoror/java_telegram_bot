@@ -23,7 +23,7 @@ public class InlineKeyboard {
 
         InlineKeyboardButton chatID = new InlineKeyboardButton("Get_Chat_ID");
 
-        chatID.setCallbackData("SendChatId " + message.getChatId());
+        chatID.setCallbackData("SendChatId-" + message.getChatId());
 
         button.add(chatID);
 
@@ -51,7 +51,7 @@ public class InlineKeyboard {
 
         InlineKeyboardButton chatID = new InlineKeyboardButton("ChatID");
 
-        chatID.setCallbackData("SendChatId " + message.getChatId());
+        chatID.setCallbackData("SendChatId" + message.getChatId());
 
         button.add(chatID);
 
