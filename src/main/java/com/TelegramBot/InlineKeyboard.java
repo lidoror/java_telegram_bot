@@ -21,6 +21,34 @@ public class InlineKeyboard {
         List<InlineKeyboardButton> button = new ArrayList<>();
         List<InlineKeyboardButton> buttonRow2 = new ArrayList<>();
 
+        InlineKeyboardButton chatID = new InlineKeyboardButton("Get_Chat_ID");
+
+        chatID.setCallbackData("SendChatId " + message.getChatId());
+
+        button.add(chatID);
+
+        InlineKeyboardButton github = new InlineKeyboardButton("github");
+
+        github.setUrl("https://github.com");
+
+        button.add(github);
+
+        InlineKeyboardButton ksp = new InlineKeyboardButton("ksp");
+        ksp.setUrl("https://ksp.co.il/web/");
+        buttonRow2.add(ksp);
+
+        keyboard.add(button);
+        keyboard.add(buttonRow2);
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        message.setReplyMarkup(inlineKeyboardMarkup);
+    }
+
+    public void inLineKeyboard1(SendMessage message){
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        List<InlineKeyboardButton> button = new ArrayList<>();
+        List<InlineKeyboardButton> buttonRow2 = new ArrayList<>();
+
         InlineKeyboardButton chatID = new InlineKeyboardButton("ChatID");
 
         chatID.setCallbackData("SendChatId " + message.getChatId());

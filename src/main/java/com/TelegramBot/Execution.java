@@ -7,7 +7,6 @@ import java.util.Locale;
 
 
 public class Execution {
-    String[] messageSplitter;
     CustomKeyboard keyboard = new CustomKeyboard();
     Balance balance = new Balance();
     Company company = new Company();
@@ -17,9 +16,7 @@ public class Execution {
     
     public void messageHandler(String command, SendMessage message) {
 
-
         switch (command.toLowerCase(Locale.ROOT)) {
-
             case "start"->{
                 message.setText("Hi this is an expenses manager bot" +
                         "\nplease choose an option:");
@@ -46,19 +43,22 @@ public class Execution {
             case "balance"->
                     message.setText(balance.getSaving());
 
-            case "overall expenses" -> {
+            case "overall expenses", "all expenses" , "all refunds"-> {
                 message.setText("not supported yet");
                 return;
             }
-
+            case "key" ->{
+                message.setText("choose your option:");
+                inLine.inLineKeyboard1(message);
+            }
 
             case "admin.center.control" -> {
                message.setText("choose an option: ");
                inLine.adminKeyboard(message);
            }
 
-            //default -> message.setText("We are very sorry, this function is not working yet.");
 
+            default -> message.setText("We are very sorry, this function is not working yet.");
         }
 
         try {
@@ -78,7 +78,6 @@ public class Execution {
                 if (isNumeric(getPrice(command))) {
                     balance.addToBalance(getPrice(command));
                     message.setText("Added to balance.");
-
                 }
             }
 
@@ -88,8 +87,9 @@ public class Execution {
         }catch(ArrayIndexOutOfBoundsException e){
             message.setText("Incorrect input");
             System.err.println("ArrayIndexOutOfBoundsException");
-        }catch(Exception e){
+        }catch(Exception e){;
             System.err.println("exception");
+
         }
 
     }
@@ -97,34 +97,39 @@ public class Execution {
 
     @NotNull
     private String getPrice(String price) {
-        messageSplitter = price.split(" ");
-        return messageSplitter[1];
+        return price.split(" ")[1];
     }
 
     @NotNull
     private String getProduct(String product) {
-        messageSplitter = product.split(" ");
-        return messageSplitter[0];
+        return product.split(" ")[0];
     }
     @NotNull
     private String getCompany(String company){
-        messageSplitter = company.split(" ");
-        return messageSplitter[2];
+        return company.split(" ")[2];
     }
-
+    @NotNull
     private boolean isNumeric(String str){
         return NumberUtils.isNumber(str);
     }
     
     @NotNull
     private StringBuilder getNote(String note){
-        messageSplitter = note.split(" ");
+        String[] messageSplitter = note.split(" ");
         StringBuilder comment = new StringBuilder(" ");
         for (int i = 3; i < messageSplitter.length; i++) {
             comment.append(messageSplitter[i]);
             comment.append(" ");
         }
         return comment;
+    }
+
+    private String inputCheck(String str){
+        return
+                "product: " + getProduct(str) +
+                "\nprice: " + getPrice(str) +
+                "\ncompany: " + getCompany(str) +
+                "\nNote: "  + getNote(str);
     }
 
 

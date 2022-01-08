@@ -6,7 +6,7 @@ public class Company {
 
     Company() {}
 
-    private List<String> company = List.of(
+    private final List<String> company = List.of(
             "דלק",
             "חשבונות",
             "כללי",
