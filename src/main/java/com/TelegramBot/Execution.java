@@ -3,6 +3,7 @@ package com.TelegramBot;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import javax.validation.constraints.NotNull;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
 
@@ -12,7 +13,7 @@ public class Execution {
     Company company = new Company();
     InlineKeyboard inLine = new InlineKeyboard();
 
-    Execution (){}
+     Execution(){}
     
     public void messageHandler(String command, SendMessage message) {
 
@@ -96,31 +97,33 @@ public class Execution {
 
 
     @NotNull
-    private String getPrice(String price) {
+    public String getPrice(String price) {
         return price.split(" ")[1];
     }
 
     @NotNull
-    private String getProduct(String product) {
+    public String getProduct(String product) {
         return product.split(" ")[0];
     }
     @NotNull
-    private String getCompany(String company){
+    public String getCompany(String company){
         return company.split(" ")[2];
     }
     @NotNull
-    private boolean isNumeric(String str){
+    public boolean isNumeric(String str){
         return NumberUtils.isNumber(str);
     }
     
     @NotNull
-    private StringBuilder getNote(String note){
+    public StringBuilder getNote(String note){
         String[] messageSplitter = note.split(" ");
-        StringBuilder comment = new StringBuilder(" ");
-        for (int i = 3; i < messageSplitter.length; i++) {
+        StringBuilder comment = new StringBuilder();
+        int i;
+        for ( i = 3; i <= messageSplitter.length-2; i++) {
             comment.append(messageSplitter[i]);
             comment.append(" ");
         }
+        comment.append(messageSplitter[i]);
         return comment;
     }
 
