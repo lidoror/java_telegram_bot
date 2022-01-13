@@ -40,7 +40,7 @@ public class ExecutionTest {
         //implementing the method
         StringBuilder note = exeTest.getNote(input);
         //testing
-        assertThat(note).isEqualTo("this is a note");
+        assertThat(String.valueOf(note)).isEqualTo("this is a note");
     }
 
     @Test
