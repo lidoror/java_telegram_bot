@@ -1,12 +1,14 @@
-package com.TelegramBot;
+package com.TelegramBot.utils;
+
 
 import java.util.List;
 
+
 public class Company {
 
-    Company() {}
+    public Company() {}
 
-    private final List<String> company = List.of(
+    private final List<String> companyList = List.of(
             "דלק",
             "חשבונות",
             "כללי",
@@ -22,6 +24,11 @@ public class Company {
     );
 
     public List<String> getList(){
-        return company;
+        return companyList;
     }
+
+
+
+
+
 }

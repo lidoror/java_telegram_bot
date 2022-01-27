@@ -1,4 +1,4 @@
-package com.TelegramBot;
+package com.TelegramBot.keyboards;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;

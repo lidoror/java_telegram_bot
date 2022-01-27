@@ -1,7 +1,7 @@
-package com.TelegramBot;
+package com.TelegramBot.balanceMgmt;
 
 public class Balance {
-    private double salary = 8900;
+    private final double salary = 8900.0;
     private static double balance;
 
     public String getSaving(){

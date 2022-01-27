@@ -1,4 +1,4 @@
-package com.TelegramBot;
+package com.TelegramBot.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,7 @@ public class MariaDB {
     private String rootConnection = "jdbc:mariadb://localhost:3333/BOT?"+
     "user=root&password=***REMOVED***&serverTimezone=UTC";
 
-    MariaDB(){}
+    public MariaDB(){}
 
     public boolean checkConnection() throws SQLException{
         Connection Connection = 

@@ -1,9 +1,12 @@
-package com.TelegramBot;
+package com.TelegramBot.codeHandler;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import com.TelegramBot.balanceMgmt.Balance;
+import com.TelegramBot.keyboards.CustomKeyboard;
+import com.TelegramBot.keyboards.InlineKeyboard;
+import com.TelegramBot.utils.Company;
+import com.TelegramBot.utils.Operations;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import javax.validation.constraints.NotNull;
-import java.lang.annotation.RetentionPolicy;
+
 import java.util.Locale;
 
 
@@ -12,8 +15,9 @@ public class Execution {
     Balance balance = new Balance();
     Company company = new Company();
     InlineKeyboard inLine = new InlineKeyboard();
+    Operations operations = new Operations();
 
-     Execution(){}
+     public Execution(){}
     
     public void messageHandler(String command, SendMessage message) {
 
@@ -50,13 +54,24 @@ public class Execution {
             }
             case "key" ->{
                 message.setText("choose your option:");
-                inLine.inLineKeyboard1(message);
+                inLine.monthKeyboard(message);
             }
 
             case "admin.center.control" -> {
                message.setText("choose an option: ");
                inLine.adminKeyboard(message);
            }
+
+           case "month" -> {
+                message.setText("Choose your month:");
+                inLine.monthKeyboard(message);
+           }
+           case "day" ->{
+                message.setText("Choose your day:");
+                inLine.dayKeyboard(message);
+
+           }
+
 
 
             default -> message.setText("We are very sorry, this function is not working yet.");
@@ -69,15 +84,15 @@ public class Execution {
                 return;
             }
 
-            if(command.contains(" ") && command.contains("-") && company.getList().contains(getCompany(command))){
-                if (isNumeric(getPrice(command))) {
-                    balance.addToBalance(getPrice(command));
+            if(command.contains(" ") && command.contains("-") && company.getList().contains(operations.getCompany(command))){
+                if (operations.isNumeric(operations.getPrice(command))) {
+                    balance.addToBalance(operations.getPrice(command));
                     message.setText("Refunded from balance");
                 }
 
-            }else if (command.contains(" ") && company.getList().contains(getCompany(command))) {
-                if (isNumeric(getPrice(command))) {
-                    balance.addToBalance(getPrice(command));
+            }else if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
+                if (operations.isNumeric(operations.getPrice(command))) {
+                    balance.addToBalance(operations.getPrice(command));
                     message.setText("Added to balance.");
                 }
             }
@@ -95,45 +110,6 @@ public class Execution {
 
     }
 
-
-    @NotNull
-    public String getPrice(String price) {
-        return price.split(" ")[1];
-    }
-
-    @NotNull
-    public String getProduct(String product) {
-        return product.split(" ")[0];
-    }
-    @NotNull
-    public String getCompany(String company){
-        return company.split(" ")[2];
-    }
-    @NotNull
-    public boolean isNumeric(String str){
-        return NumberUtils.isNumber(str);
-    }
-    
-    @NotNull
-    public StringBuilder getNote(String note){
-        String[] messageSplitter = note.split(" ");
-        StringBuilder comment = new StringBuilder();
-        int i;
-        for ( i = 3; i <= messageSplitter.length-2; i++) {
-            comment.append(messageSplitter[i]);
-            comment.append(" ");
-        }
-        comment.append(messageSplitter[i]);
-        return comment;
-    }
-
-    private String inputCheck(String str){
-        return
-                "product: " + getProduct(str) +
-                "\nprice: " + getPrice(str) +
-                "\ncompany: " + getCompany(str) +
-                "\nNote: "  + getNote(str);
-    }
 
 
 

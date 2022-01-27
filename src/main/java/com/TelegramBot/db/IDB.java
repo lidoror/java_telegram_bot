@@ -1,4 +1,4 @@
-package com.TelegramBot;
+package com.TelegramBot.db;
 
 public interface IDB {
 

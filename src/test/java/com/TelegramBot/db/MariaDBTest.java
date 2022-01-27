@@ -1,11 +1,10 @@
-package com.TelegramBot;
+package com.TelegramBot.db;
 
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MariaDBTest {
     MariaDB db = new MariaDB();
@@ -19,4 +18,5 @@ class MariaDBTest {
     void checkLidorConnection() throws SQLException{
         assertThat(db.checkLidorConnection()).isTrue();
     }
+
 }
