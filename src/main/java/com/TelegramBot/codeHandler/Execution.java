@@ -1,12 +1,15 @@
 package com.TelegramBot.codeHandler;
 
 import com.TelegramBot.balanceMgmt.Balance;
+import com.TelegramBot.db.MariaDB;
 import com.TelegramBot.keyboards.CustomKeyboard;
 import com.TelegramBot.keyboards.InlineKeyboard;
 import com.TelegramBot.utils.Company;
 import com.TelegramBot.utils.Operations;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Locale;
 
 
@@ -79,9 +82,13 @@ public class Execution {
 
         try {
 
-            if(command.contains("SendChatId-")){
+            if(command.contains("SendChatId.admin-")){
                 message.setText(command.split("-")[1]);
                 return;
+            }
+            if (command.contains("checkDB.admin")){
+                Operations operation = new Operations();
+                message.setText(operation.dbKeyboardCheck());
             }
 
             if(command.contains(" ") && command.contains("-") && company.getList().contains(operations.getCompany(command))){
@@ -92,7 +99,10 @@ public class Execution {
 
             }else if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
                 if (operations.isNumeric(operations.getPrice(command))) {
+                    MariaDB db = new MariaDB();
+
                     balance.addToBalance(operations.getPrice(command));
+                    db.updateDB(operations.getProduct(command),Integer.parseInt(operations.getPrice(command)), operations.getCompany(command),String.valueOf(operations.getNote(command)), String.valueOf(LocalDate.now()));
                     message.setText("Added to balance.");
                 }
             }
@@ -103,7 +113,10 @@ public class Execution {
         }catch(ArrayIndexOutOfBoundsException e){
             message.setText("Incorrect input");
             System.err.println("ArrayIndexOutOfBoundsException");
-        }catch(Exception e){;
+        }catch (SQLException sqlException){
+            System.err.println("No Connection to DB");
+            message.setText("No Connection to DB");
+        } catch(Exception e){
             System.err.println("exception");
 
         }

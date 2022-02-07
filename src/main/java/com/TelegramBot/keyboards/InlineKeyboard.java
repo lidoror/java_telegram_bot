@@ -18,13 +18,13 @@ public class InlineKeyboard {
         List<List<InlineKeyboardButton>> adminKeyboard = new ArrayList<>();
         List<InlineKeyboardButton> adminButton = new ArrayList<>();
 
-        InlineKeyboardButton chatID = new InlineKeyboardButton("Get_Chat_ID");
-        chatID.setCallbackData("SendChatId-" + message.getChatId());
+        InlineKeyboardButton chatID = new InlineKeyboardButton("ChatID");
+        chatID.setCallbackData("SendChatId.admin-" + message.getChatId());
         adminButton.add(chatID);
 
-        InlineKeyboardButton github = new InlineKeyboardButton("github");
-        github.setUrl("https://github.com");
-        adminButton.add(github);
+        InlineKeyboardButton dbStatus = new InlineKeyboardButton("DBStatus");
+        dbStatus.setCallbackData("checkDB.admin");
+        adminButton.add(dbStatus);
 
         InlineKeyboardButton ksp = new InlineKeyboardButton("ksp");
         ksp.setUrl("https://ksp.co.il/web/");
