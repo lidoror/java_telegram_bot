@@ -14,9 +14,6 @@ class MariaDBTest {
         assertThat(db.checkConnection()).isTrue();
     }
 
-    @Test
-    void checkLidorConnection() throws SQLException{
-        assertThat(db.checkLidorConnection()).isTrue();
-    }
+
 
 }

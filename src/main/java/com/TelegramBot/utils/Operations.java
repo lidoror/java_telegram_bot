@@ -15,7 +15,6 @@ public class Operations {
     public String getPrice(String price) {
         return price.split(" ")[1];
     }
-
     @NotNull
     public String getProduct(String product) {
         return product.split(" ")[0];
@@ -24,7 +23,7 @@ public class Operations {
     public String getCompany(String company){
         return company.split(" ")[2];
     }
-    @NotNull
+
     public boolean isNumeric(String str){
         return NumberUtils.isNumber(str);
     }

@@ -1,8 +1,6 @@
 package com.TelegramBot.utils;
 
-
 import java.util.List;
-
 
 public class Company {
 
@@ -20,7 +18,8 @@ public class Company {
             "כביש6",
             "אפל",
             "משחקים",
-            "עלי"
+            "עלי",
+            "יוחננוף"
     );
 
     public List<String> getList(){

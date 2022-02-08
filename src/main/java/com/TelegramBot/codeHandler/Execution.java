@@ -100,9 +100,10 @@ public class Execution {
             }else if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
                 if (operations.isNumeric(operations.getPrice(command))) {
                     MariaDB db = new MariaDB();
-
                     balance.addToBalance(operations.getPrice(command));
-                    db.updateDB(operations.getProduct(command),Integer.parseInt(operations.getPrice(command)), operations.getCompany(command),String.valueOf(operations.getNote(command)), String.valueOf(LocalDate.now()));
+                    db.updateDB(operations.getProduct(command),
+                            operations.getPrice(command), operations.getCompany(command),
+                            String.valueOf(operations.getNote(command)));
                     message.setText("Added to balance.");
                 }
             }

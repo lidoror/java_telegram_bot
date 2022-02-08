@@ -23,7 +23,7 @@ public class InlineKeyboard {
         adminButton.add(chatID);
 
         InlineKeyboardButton dbStatus = new InlineKeyboardButton("DBStatus");
-        dbStatus.setCallbackData("checkDB.admin");
+        dbStatus.setCallbackData("checkDBS.admin");
         adminButton.add(dbStatus);
 
         InlineKeyboardButton ksp = new InlineKeyboardButton("ksp");
