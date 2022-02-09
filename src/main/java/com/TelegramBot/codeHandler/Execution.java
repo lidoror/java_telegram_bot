@@ -19,6 +19,7 @@ public class Execution {
     Company company = new Company();
     InlineKeyboard inLine = new InlineKeyboard();
     Operations operations = new Operations();
+    MariaDB db = new MariaDB();
 
      public Execution(){}
     
@@ -41,11 +42,9 @@ public class Execution {
                         "order->-price->company\n" +
                         "dont forget the - sign before the price");
             }
-            case "b"->
-                    message.setText(balance.getBalance());
+            case "b"-> message.setText(balance.getBalance());
 
-            case "s" ->
-                    message.setText(balance.getSalary());
+            case "s" -> message.setText(balance.getSalary());
 
 
             case "balance"->
@@ -74,7 +73,10 @@ public class Execution {
                 inLine.dayKeyboard(message);
 
            }
+           case "t" -> message.setText(db.getProductPrice());
 
+
+           case "r" -> message.setText(db.sumAllMoneySpend());
 
 
             default -> message.setText("We are very sorry, this function is not working yet.");

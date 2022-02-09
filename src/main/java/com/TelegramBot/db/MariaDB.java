@@ -2,6 +2,8 @@ package com.TelegramBot.db;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MariaDB implements IDB{
@@ -38,8 +40,31 @@ public class MariaDB implements IDB{
 
     @Override
     public void readAll() {
+        String sqlQuery = "Select * From shopping";
+
 
     }
+
+    public String getProductPrice()  {
+        String sqlQuery = "Select * From shopping";
+        List<ShoppingMgnt> productPrice = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                ShoppingMgnt shopping = new ShoppingMgnt(resultSet.getString(1), resultSet.getString(2));
+                productPrice.add(shopping);
+            }
+
+        }catch (SQLException sqlException){
+            System.err.println("SQLException getProductPrice");
+        }
+        return String.valueOf(productPrice);
+    }
+
+
+
 
     public void updateDB(String product, String price, String company, String note) {
 
@@ -58,6 +83,30 @@ public class MariaDB implements IDB{
             System.err.println("SQL error insertion error");
             sqlException.printStackTrace();
         }
+    }
+
+    public String sumAllMoneySpend(){
+        String sqlQuery = "Select * From shopping";
+        List<Double> priceSum = new ArrayList<>();
+        double sum = 0;
+        try (Connection conn = getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                ShoppingMgnt prices = new ShoppingMgnt(resultSet.getString(2));
+                priceSum.add(Double.parseDouble(prices.getPrice()));
+
+            }
+            for (Double looper : priceSum) {
+                sum += looper;
+            }
+
+
+        }catch (SQLException sqlException){
+            System.err.println("SQLException sumAllMoneySpend");
+        }
+        return String.valueOf(sum);
     }
 
 
