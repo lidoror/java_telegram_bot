@@ -2,12 +2,11 @@ package com.TelegramBot.utils;
 
 import com.TelegramBot.db.MariaDB;
 import org.apache.commons.lang3.math.NumberUtils;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.sql.SQLException;
 
 public class Operations {
+    MariaDB db = new MariaDB();
 
     public Operations(){}
 
@@ -42,6 +41,7 @@ public class Operations {
         return comment;
     }
 
+
     public String inputCheck(String str){
         return
                 "product: " + getProduct(str) +
@@ -49,6 +49,7 @@ public class Operations {
                         "\ncompany: " + getCompany(str) +
                         "\nNote: "  + getNote(str);
     }
+
 
     public String dbKeyboardCheck() throws SQLException {
         MariaDB db = new MariaDB();
@@ -58,6 +59,12 @@ public class Operations {
             throw new SQLException("Inactive");
     }
 
+
+    public void setDbParameter(String command) {
+        db.updateDB(getProduct(command),
+                getPrice(command), getCompany(command),
+                String.valueOf(getNote(command)));
+    }
 
 
 

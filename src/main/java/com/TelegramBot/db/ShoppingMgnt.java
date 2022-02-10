@@ -53,4 +53,5 @@ public class ShoppingMgnt {
                 "\nNote: " + getNote() +
                 "\nPurchase Date: " + getPurchase_date() + "\n";
     }
+
 }

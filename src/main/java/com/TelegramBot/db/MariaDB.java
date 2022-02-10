@@ -36,8 +36,6 @@ public class MariaDB implements IDB{
     }
 
 
-
-
     @Override
     public void readAll() {
         String sqlQuery = "Select * From shopping";
@@ -56,6 +54,8 @@ public class MariaDB implements IDB{
                 ShoppingMgnt shopping = new ShoppingMgnt(resultSet.getString(1), resultSet.getString(2));
                 productPrice.add(shopping);
             }
+            resultSet.close();
+            pstmt.close();
 
         }catch (SQLException sqlException){
             System.err.println("SQLException getProductPrice");
@@ -101,7 +101,8 @@ public class MariaDB implements IDB{
             for (Double looper : priceSum) {
                 sum += looper;
             }
-
+            resultSet.close();
+            pstmt.close();
 
         }catch (SQLException sqlException){
             System.err.println("SQLException sumAllMoneySpend");

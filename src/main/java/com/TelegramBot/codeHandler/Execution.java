@@ -9,7 +9,6 @@ import com.TelegramBot.utils.Operations;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Locale;
 
 
@@ -96,16 +95,14 @@ public class Execution {
             if(command.contains(" ") && command.contains("-") && company.getList().contains(operations.getCompany(command))){
                 if (operations.isNumeric(operations.getPrice(command))) {
                     balance.addToBalance(operations.getPrice(command));
+                    operations.setDbParameter(command);
                     message.setText("Refunded from balance");
                 }
 
             }else if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
                 if (operations.isNumeric(operations.getPrice(command))) {
-                    MariaDB db = new MariaDB();
                     balance.addToBalance(operations.getPrice(command));
-                    db.updateDB(operations.getProduct(command),
-                            operations.getPrice(command), operations.getCompany(command),
-                            String.valueOf(operations.getNote(command)));
+                    operations.setDbParameter(command);
                     message.setText("Added to balance.");
                 }
             }
@@ -125,6 +122,7 @@ public class Execution {
         }
 
     }
+
 
 
 
