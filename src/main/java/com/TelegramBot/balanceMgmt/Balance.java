@@ -1,15 +1,16 @@
 package com.TelegramBot.balanceMgmt;
 
+import com.TelegramBot.db.MariaDB;
+
 public class Balance {
-    private final double salary = 8900.0;
+    private final double salary = 17350;
     private static double balance;
+    MariaDB db = new MariaDB();
 
-    public String getSaving(){
-        return String.valueOf(salary - balance);
-    }
 
-    public String getBalance(){
-        return String.valueOf(balance);
+
+    public Double getBalance(){
+        return salary - Double.parseDouble(db.getMonthlySpent());
     }
 
     public void addToBalance(String num){
@@ -19,5 +20,9 @@ public class Balance {
 
     public String getSalary(){
         return String.valueOf(salary);
+    }
+
+    public String getStringBalance(){
+        return String.valueOf(getBalance());
     }
 }

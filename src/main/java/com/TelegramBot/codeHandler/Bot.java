@@ -34,8 +34,10 @@ public class Bot extends TelegramLongPollingBot {
             command = update.getCallbackQuery().getData();
             message.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
         }
-
-        exe.messageHandler(command, message);
+        if (message.getChatId().equals("561947096") || message.getChatId().equals("1072526175")|| message.getChatId().equals("-686089090"))
+            exe.messageHandler(command, message);
+        else
+            message.setText("A problem accrued");
         try {
             execute(message);
         } catch (TelegramApiException e) {

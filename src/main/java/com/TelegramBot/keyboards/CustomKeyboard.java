@@ -22,8 +22,8 @@ public class CustomKeyboard {
 
     row = new KeyboardRow();
         row.add("Overall Expenses");
-        row.add("All Expenses");
-        row.add("All Refunds");
+        row.add("Monthly Expenses");
+        row.add("Monthly Spent");
         keyboard.add(row);
 
         keyboardMarkup.setKeyboard(keyboard);

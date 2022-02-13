@@ -3,7 +3,9 @@ package com.TelegramBot.utils;
 import com.TelegramBot.db.MariaDB;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
+
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Operations {
     MariaDB db = new MariaDB();
@@ -65,6 +67,31 @@ public class Operations {
                 getPrice(command), getCompany(command),
                 String.valueOf(getNote(command)));
     }
+
+
+    public boolean checkForCurrentMonth(String givenDate){
+        LocalDate currentDate = LocalDate.now();
+        LocalDate monthToCheck = LocalDate.parse(givenDate);
+        return currentDate.getMonth().equals(monthToCheck.getMonth());
+    }
+
+    public String getRefundMessage(){
+        return "please enter the refund\n" +
+                "enter the refund in this order \n" +
+                "order->-price->company\n" +
+                "dont forget the - sign before the price";
+    }
+
+    public String getExpenseMessage(){
+        return "Please enter an expense" +
+                "\nenter the expense in this order \nproduct->price->company";
+    }
+
+    public String getStartMessage(){
+        return "Hi this is an expenses manager bot" +
+                "\nplease choose an option:";
+    }
+
 
 
 

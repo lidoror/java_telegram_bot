@@ -26,33 +26,36 @@ public class Execution {
 
         switch (command.toLowerCase(Locale.ROOT)) {
             case "start"->{
-                message.setText("Hi this is an expenses manager bot" +
-                        "\nplease choose an option:");
+                message.setText(operations.getStartMessage());
                 keyboard.keyboard1(message);
             }
 
             case "expenses" ->{
-                message.setText("Please enter an expense" +
-                        "\nenter the expense in this order \nproduct->price->company");
+                message.setText(operations.getExpenseMessage());
             }
             case "refund" ->{
-                message.setText("please enter the refund\n" +
-                        "enter the refund in this order \n" +
-                        "order->-price->company\n" +
-                        "dont forget the - sign before the price");
+                message.setText(operations.getRefundMessage());
             }
-            case "b"-> message.setText(balance.getBalance());
-
-            case "s" -> message.setText(balance.getSalary());
 
 
             case "balance"->
-                    message.setText(balance.getSaving());
+                    message.setText(balance.getStringBalance());
 
-            case "overall expenses", "all expenses" , "all refunds"-> {
-                message.setText("not supported yet");
+            case "monthly spent"-> {
+                message.setText(db.getMonthlySpent());
                 return;
             }
+            case "monthly expenses"->{
+                message.setText(db.getMonthlyExpenses());
+                return;
+            }
+
+
+            case "overall expenses" -> {
+                message.setText(db.readAll());
+                return;
+            }
+
             case "key" ->{
                 message.setText("choose your option:");
                 inLine.monthKeyboard(message);
@@ -63,19 +66,8 @@ public class Execution {
                inLine.adminKeyboard(message);
            }
 
-           case "month" -> {
-                message.setText("Choose your month:");
-                inLine.monthKeyboard(message);
-           }
-           case "day" ->{
-                message.setText("Choose your day:");
-                inLine.dayKeyboard(message);
+           case "r" -> message.setText(db.sumAllMoneySpent());
 
-           }
-           case "t" -> message.setText(db.getProductPrice());
-
-
-           case "r" -> message.setText(db.sumAllMoneySpend());
 
 
             default -> message.setText("We are very sorry, this function is not working yet.");
@@ -87,9 +79,10 @@ public class Execution {
                 message.setText(command.split("-")[1]);
                 return;
             }
-            if (command.contains("checkDB.admin")){
+            if (command.contains("checkDBS.admin")){
                 Operations operation = new Operations();
                 message.setText(operation.dbKeyboardCheck());
+                return;
             }
 
             if(command.contains(" ") && command.contains("-") && company.getList().contains(operations.getCompany(command))){

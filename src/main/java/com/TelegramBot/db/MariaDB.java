@@ -1,5 +1,7 @@
 package com.TelegramBot.db;
 
+import com.TelegramBot.utils.Operations;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,10 +39,27 @@ public class MariaDB implements IDB{
 
 
     @Override
-    public void readAll() {
+    public String readAll() {
         String sqlQuery = "Select * From shopping";
+        List<ShoppingMgnt> allData = new ArrayList<>();
+        try(Connection conn = getConnection()){
+            PreparedStatement pstms = conn.prepareStatement(sqlQuery);
+            ResultSet resultSet = pstms.executeQuery();
 
+            while (resultSet.next()){
+                ShoppingMgnt shoppingMgnt = new ShoppingMgnt(resultSet.getString(1) , resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getString(4),resultSet.getString(5));
+                allData.add(shoppingMgnt);
+            }
+            resultSet.close();
+            pstms.close();
 
+        }catch (SQLException sqlException){
+            System.err.println("Error in read all");
+            sqlException.printStackTrace();
+        }
+
+        return String.valueOf(allData).replace("[","").replace(", ","").replace("]","");
     }
 
     public String getProductPrice()  {
@@ -60,7 +79,7 @@ public class MariaDB implements IDB{
         }catch (SQLException sqlException){
             System.err.println("SQLException getProductPrice");
         }
-        return String.valueOf(productPrice);
+        return String.valueOf(productPrice).replace("[","").replace(",","\b").replace("]","");
     }
 
 
@@ -85,7 +104,7 @@ public class MariaDB implements IDB{
         }
     }
 
-    public String sumAllMoneySpend(){
+    public String sumAllMoneySpent(){
         String sqlQuery = "Select * From shopping";
         List<Double> priceSum = new ArrayList<>();
         double sum = 0;
@@ -101,6 +120,7 @@ public class MariaDB implements IDB{
             for (Double looper : priceSum) {
                 sum += looper;
             }
+
             resultSet.close();
             pstmt.close();
 
@@ -110,6 +130,59 @@ public class MariaDB implements IDB{
         return String.valueOf(sum);
     }
 
+    public String getMonthlyExpenses(){
+        Operations operations = new Operations();
+        String sqlQuery = "Select * From shopping";
+        List<ShoppingMgnt> monthlyData = new ArrayList<>();
+        try(Connection conn = getConnection()){
+            PreparedStatement pstms = conn.prepareStatement(sqlQuery);
+            ResultSet resultSet = pstms.executeQuery();
 
+            while (resultSet.next()){
+                if (operations.checkForCurrentMonth(resultSet.getString(5))) {
+                    ShoppingMgnt shoppingMgnt = new ShoppingMgnt(resultSet.getString(1), resultSet.getString(2),
+                            resultSet.getString(3), resultSet.getString(4), resultSet.getString(5));
+                    monthlyData.add(shoppingMgnt);
+                }
+            }
+            resultSet.close();
+            pstms.close();
+
+        }catch (SQLException sqlException){
+            System.err.println("Error in read all");
+            sqlException.printStackTrace();
+        }
+
+        return String.valueOf(monthlyData).replace("[","").replace(", ","").replace("]","");
+    }
+
+    public String getMonthlySpent(){
+        Operations operations = new Operations();
+        String sqlQuery = "Select * From shopping";
+        List<Double> monthlySum = new ArrayList<>();
+        double sum = 0;
+        try (Connection conn = getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                if (operations.checkForCurrentMonth(resultSet.getString(5))) {
+                    ShoppingMgnt prices = new ShoppingMgnt(resultSet.getString(2));
+                    monthlySum.add(Double.parseDouble(prices.getPrice()));
+                }
+
+            }
+            for (Double looper : monthlySum) {
+                sum += looper;
+            }
+
+            resultSet.close();
+            pstmt.close();
+
+        }catch (SQLException sqlException){
+            System.err.println("SQLException sumAllMoneySpend");
+        }
+        return String.valueOf(sum);
+    }
     
 }

@@ -7,6 +7,8 @@ public class ShoppingMgnt {
     private String note;
     private String purchase_date;
 
+    public ShoppingMgnt(){}
+
     public ShoppingMgnt(String price) {
         this.price = price;
     }
@@ -51,7 +53,10 @@ public class ShoppingMgnt {
                 "\nPrice: " + getPrice() +
                 "\nCompany: " + getCompany() +
                 "\nNote: " + getNote() +
-                "\nPurchase Date: " + getPurchase_date() + "\n";
+                "\nPurchase Date: " + getPurchase_date()
+                        + "\n-----------\n";
     }
+
+
 
 }
