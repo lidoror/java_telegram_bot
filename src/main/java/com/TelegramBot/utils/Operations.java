@@ -92,6 +92,10 @@ public class Operations {
                 "\nplease choose an option:";
     }
 
+    public String chooseOptionPrompt(){
+        return "Choose an option: ";
+    }
+
 
 
 

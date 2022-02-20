@@ -42,11 +42,13 @@ public class Execution {
                     message.setText(balance.getStringBalance());
 
             case "monthly spent"-> {
-                message.setText(db.getMonthlySpent());
+                message.setText(operations.chooseOptionPrompt());
+                inLine.monthlySum(message);
                 return;
             }
             case "monthly expenses"->{
-                message.setText(db.getMonthlyExpenses());
+                message.setText(operations.chooseOptionPrompt());
+                inLine.monthlyCategory(message);
                 return;
             }
 
@@ -56,17 +58,14 @@ public class Execution {
                 return;
             }
 
-            case "key" ->{
-                message.setText("choose your option:");
-                inLine.monthKeyboard(message);
-            }
 
             case "admin.center.control" -> {
-               message.setText("choose an option: ");
+               message.setText(operations.chooseOptionPrompt());
                inLine.adminKeyboard(message);
+               return;
            }
 
-           case "r" -> message.setText(db.sumAllMoneySpent());
+
 
 
 
@@ -74,29 +73,55 @@ public class Execution {
         }
 
         try {
+            if (command.contains("monthlyCategory.")){
+                if (command.contains("General")){
+                    message.setText(db.getMonthlyCategoryRecord("כללי"));
+                }else if (command.contains("fuel")){
+                    message.setText(db.getMonthlyCategoryRecord("דלק"));
+                }else if (command.contains("homeShopping")){
+                    message.setText(db.getMonthlyCategoryRecord("משותף"));
+                }else if (command.contains("internetShopping")){
+                    message.setText(db.getMonthlyCategoryRecord("קניות"));
+                }else if (command.contains("Food")){
+                    message.setText(db.getMonthlyCategoryRecord("אוכל"));
+                }else
+                    message.setText(db.getMonthlyExpenses());
+                return;
+            }
+
+            if (command.contains("monthlySum.")){
+                if (command.contains("General")){
+                    message.setText(db.getCategoryMonthlySpent("כללי"));
+                }else if (command.contains("fuel")){
+                    message.setText(db.getCategoryMonthlySpent("דלק"));
+                }else if (command.contains("homeShopping")){
+                    message.setText(db.getCategoryMonthlySpent("משותף"));
+                }else if (command.contains("internetShopping")){
+                    message.setText(db.getCategoryMonthlySpent("קניות"));
+                }else if (command.contains("Food")){
+                    message.setText(db.getCategoryMonthlySpent("אוכל"));
+                }else
+                    message.setText(db.getMonthlySpent());
+                return;
+            }
+
 
             if(command.contains("SendChatId.admin-")){
                 message.setText(command.split("-")[1]);
                 return;
             }
-            if (command.contains("checkDBS.admin")){
-                Operations operation = new Operations();
-                message.setText(operation.dbKeyboardCheck());
+            if (command.equals("checkDBS.admin")){
+                message.setText(operations.dbKeyboardCheck());
                 return;
             }
 
-            if(command.contains(" ") && command.contains("-") && company.getList().contains(operations.getCompany(command))){
-                if (operations.isNumeric(operations.getPrice(command))) {
-                    balance.addToBalance(operations.getPrice(command));
-                    operations.setDbParameter(command);
-                    message.setText("Refunded from balance");
-                }
 
-            }else if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
+
+             if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
                 if (operations.isNumeric(operations.getPrice(command))) {
                     balance.addToBalance(operations.getPrice(command));
                     operations.setDbParameter(command);
-                    message.setText("Added to balance.");
+                    message.setText("Data Added.");
                 }
             }
 
