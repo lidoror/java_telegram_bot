@@ -36,10 +36,8 @@ public class Execution {
             case "refund" ->{
                 message.setText(operations.getRefundMessage());
             }
-
-
             case "balance"->
-                    message.setText(balance.getStringBalance());
+                    message.setText("Balance: \n"+balance.getStringBalance());
 
             case "monthly spent"-> {
                 message.setText(operations.chooseOptionPrompt());
@@ -51,57 +49,28 @@ public class Execution {
                 inLine.monthlyCategory(message);
                 return;
             }
-
-
             case "overall expenses" -> {
                 message.setText(db.readAll());
                 return;
             }
-
-
             case "admin.center.control" -> {
                message.setText(operations.chooseOptionPrompt());
                inLine.adminKeyboard(message);
                return;
            }
+           case "sl" -> message.setText(String.valueOf(company.getList()));
 
-
-
-
-
-            default -> message.setText("We are very sorry, this function is not working yet.");
+           default -> message.setText("We are very sorry, this function is not working yet.");
         }
 
         try {
             if (command.contains("monthlyCategory.")){
-                if (command.contains("General")){
-                    message.setText(db.getMonthlyCategoryRecord("כללי"));
-                }else if (command.contains("fuel")){
-                    message.setText(db.getMonthlyCategoryRecord("דלק"));
-                }else if (command.contains("homeShopping")){
-                    message.setText(db.getMonthlyCategoryRecord("משותף"));
-                }else if (command.contains("internetShopping")){
-                    message.setText(db.getMonthlyCategoryRecord("קניות"));
-                }else if (command.contains("Food")){
-                    message.setText(db.getMonthlyCategoryRecord("אוכל"));
-                }else
-                    message.setText(db.getMonthlyExpenses());
+                operations.monthlyCategory(command, message);
                 return;
             }
 
             if (command.contains("monthlySum.")){
-                if (command.contains("General")){
-                    message.setText(db.getCategoryMonthlySpent("כללי"));
-                }else if (command.contains("fuel")){
-                    message.setText(db.getCategoryMonthlySpent("דלק"));
-                }else if (command.contains("homeShopping")){
-                    message.setText(db.getCategoryMonthlySpent("משותף"));
-                }else if (command.contains("internetShopping")){
-                    message.setText(db.getCategoryMonthlySpent("קניות"));
-                }else if (command.contains("Food")){
-                    message.setText(db.getCategoryMonthlySpent("אוכל"));
-                }else
-                    message.setText(db.getMonthlySpent());
+                operations.monthlySum(command,message);
                 return;
             }
 
@@ -115,9 +84,7 @@ public class Execution {
                 return;
             }
 
-
-
-             if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
+            if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
                 if (operations.isNumeric(operations.getPrice(command))) {
                     balance.addToBalance(operations.getPrice(command));
                     operations.setDbParameter(command);
@@ -140,7 +107,6 @@ public class Execution {
         }
 
     }
-
 
 
 

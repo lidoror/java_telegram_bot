@@ -3,6 +3,7 @@ package com.TelegramBot.utils;
 import com.TelegramBot.db.MariaDB;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -96,7 +97,37 @@ public class Operations {
         return "Choose an option: ";
     }
 
+    public void monthlyCategory(String command, SendMessage message){
+        if (command.contains("General")){
+            message.setText("General: \n"+db.getMonthlyCategoryRecord("כללי"));
+        }else if (command.contains("fuel")){
+            message.setText("Fuel: \n"+db.getMonthlyCategoryRecord("דלק"));
+        }else if (command.contains("homeShopping")){
+            message.setText("House: \n"+db.getMonthlyCategoryRecord("משותף"));
+        }else if (command.contains("internetShopping")){
+            message.setText("Shopping: "+db.getMonthlyCategoryRecord("קניות"));
+        }else if (command.contains("Food")){
+            message.setText("Food: "+db.getMonthlyCategoryRecord("אוכל"));
+        }else
+            message.setText("All Expenses: \n"+db.getMonthlyExpenses());
 
+    }
+
+    public void monthlySum(String command , SendMessage message){
+        if (command.contains("General")){
+            message.setText("General:\n"+db.getCategoryMonthlySpent("כללי"));
+        }else if (command.contains("fuel")){
+            message.setText("Fuel:\n"+db.getCategoryMonthlySpent("דלק"));
+        }else if (command.contains("homeShopping")){
+            message.setText("House:\n"+db.getCategoryMonthlySpent("משותף"));
+        }else if (command.contains("internetShopping")){
+            message.setText("Shopping:\n"+db.getCategoryMonthlySpent("קניות"));
+        }else if (command.contains("Food")){
+            message.setText("Food:\n"+db.getCategoryMonthlySpent("אוכל"));
+        }else
+            message.setText("All Spending:\n"+db.getMonthlySpent());
+
+    }
 
 
 }

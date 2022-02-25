@@ -10,8 +10,8 @@ import java.util.List;
 
 public class MariaDB implements IDB{
 
-    private final String rootConnection = "jdbc:mariadb://localhost:3333/bot?"+
-    "user=root&password=***REMOVED***&serverTimezone=UTC";
+    private final String rootConnection = "jdbc:mariadb://localhost:3334/bot?"+
+    "user=root&password=Oranim14265!&serverTimezone=UTC";
 
     public MariaDB(){}
 
