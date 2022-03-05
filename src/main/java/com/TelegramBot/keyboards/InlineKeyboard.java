@@ -26,8 +26,6 @@ public class InlineKeyboard {
         dbStatus.setCallbackData("checkDBS.admin");
         adminButton.add(dbStatus);
 
-        InlineKeyboardButton ksp = new InlineKeyboardButton("ksp");
-        ksp.setUrl("https://ksp.co.il/web/");
         adminKeyboard.add(adminButton);
 
         adminInlineKeyboardMarkup.setKeyboard(adminKeyboard);
@@ -130,5 +128,27 @@ public class InlineKeyboard {
         monthlySum.setKeyboard(rowList);
         message.setReplyMarkup(monthlySum);
 
+    }
+
+    public void showMonths(SendMessage message){
+        InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        List<InlineKeyboardButton> buttons = new ArrayList<>();
+
+        int year = 2022;
+
+        for (int i = 1; i <= 12; i++){
+            InlineKeyboardButton monthButton = new InlineKeyboardButton(i + "/" + year);
+            monthButton.setCallbackData("monthDbCheck-"+i);
+            buttons.add(monthButton);
+            if (i % 4 == 0){
+                rowList.add(buttons);
+                buttons = new ArrayList<>();
+            }
+
+        }
+        rowList.add(buttons);
+        monthsMarkup.setKeyboard(rowList);
+        message.setReplyMarkup(monthsMarkup);
     }
 }

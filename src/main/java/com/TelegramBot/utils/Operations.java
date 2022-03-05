@@ -17,10 +17,12 @@ public class Operations {
     public String getPrice(String price) {
         return price.split(" ")[1];
     }
+
     @NotNull
     public String getProduct(String product) {
         return product.split(" ")[0];
     }
+
     @NotNull
     public String getCompany(String company){
         return company.split(" ")[2];
@@ -70,6 +72,8 @@ public class Operations {
     }
 
 
+
+
     public boolean checkForCurrentMonth(String givenDate){
         LocalDate currentDate = LocalDate.now();
         LocalDate monthToCheck = LocalDate.parse(givenDate);
@@ -99,15 +103,15 @@ public class Operations {
 
     public void monthlyCategory(String command, SendMessage message){
         if (command.contains("General")){
-            message.setText("General: \n"+db.getMonthlyCategoryRecord("כללי"));
+            message.setText("General:\n"+db.getMonthlyCategoryRecord("כללי"));
         }else if (command.contains("fuel")){
-            message.setText("Fuel: \n"+db.getMonthlyCategoryRecord("דלק"));
+            message.setText("Fuel:\n"+db.getMonthlyCategoryRecord("דלק"));
         }else if (command.contains("homeShopping")){
-            message.setText("House: \n"+db.getMonthlyCategoryRecord("משותף"));
+            message.setText("House:\n"+db.getMonthlyCategoryRecord("משותף"));
         }else if (command.contains("internetShopping")){
-            message.setText("Shopping: "+db.getMonthlyCategoryRecord("קניות"));
+            message.setText("Shopping:\n"+db.getMonthlyCategoryRecord("קניות"));
         }else if (command.contains("Food")){
-            message.setText("Food: "+db.getMonthlyCategoryRecord("אוכל"));
+            message.setText("Food:\n"+db.getMonthlyCategoryRecord("אוכל"));
         }else
             message.setText("All Expenses: \n"+db.getMonthlyExpenses());
 

@@ -50,7 +50,8 @@ public class Execution {
                 return;
             }
             case "overall expenses" -> {
-                message.setText(db.readAll());
+                message.setText(operations.chooseOptionPrompt());
+                inLine.showMonths(message);
                 return;
             }
             case "admin.center.control" -> {
@@ -58,7 +59,8 @@ public class Execution {
                inLine.adminKeyboard(message);
                return;
            }
-           case "sl" -> message.setText(String.valueOf(company.getList()));
+
+           case "/show company" -> message.setText(String.valueOf(company.getList()));
 
            default -> message.setText("We are very sorry, this function is not working yet.");
         }
@@ -67,13 +69,18 @@ public class Execution {
             if (command.contains("monthlyCategory.")){
                 operations.monthlyCategory(command, message);
                 return;
-            }
-
-            if (command.contains("monthlySum.")){
+            } else if (command.contains("monthlySum.")){
                 operations.monthlySum(command,message);
                 return;
             }
 
+            if (command.contains("monthDbCheck-")){
+                String month = command.split("-")[1];
+                if (db.getMonthExpense(month).isEmpty()){
+                    message.setText("No Expenses this month.");
+                }else
+                    message.setText("Month "+month+" Expenses:\n"+db.getMonthExpense(month));
+            }
 
             if(command.contains("SendChatId.admin-")){
                 message.setText(command.split("-")[1]);
@@ -88,7 +95,7 @@ public class Execution {
                 if (operations.isNumeric(operations.getPrice(command))) {
                     balance.addToBalance(operations.getPrice(command));
                     operations.setDbParameter(command);
-                    message.setText("Data Added.");
+                    message.setText("Data added to bot.");
                 }
             }
 

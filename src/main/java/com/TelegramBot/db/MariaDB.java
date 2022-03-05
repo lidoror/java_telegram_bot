@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MariaDB implements IDB{
 
-    private final String rootConnection = "jdbc:mariadb://localhost:3334/bot?"+
+    private final String rootConnection = "jdbc:mariadb://localhost:3306/bot?"+
     "user=root&password=Oranim14265!&serverTimezone=UTC";
 
     public MariaDB(){}
@@ -23,8 +23,6 @@ public class MariaDB implements IDB{
         return isValid;        
     }
 
-
-
     private Connection getConnection(){
         Connection connection = null;
         try {
@@ -36,7 +34,6 @@ public class MariaDB implements IDB{
         }
         return connection;
     }
-
 
     @Override
     public String readAll() {
@@ -62,6 +59,32 @@ public class MariaDB implements IDB{
         return String.valueOf(allData).replace("[","").replace(", ","").replace("]","");
     }
 
+    public String getMonthExpense(String month){
+        String sqlQuery = "Select * From shopping";
+        List<ShoppingMgnt> allData = new ArrayList<>();
+        try(Connection conn = getConnection()){
+            PreparedStatement pstms = conn.prepareStatement(sqlQuery);
+            ResultSet resultSet = pstms.executeQuery();
+
+            while (resultSet.next()){
+                if (resultSet.getString(5).split("-")[1].contains(month)) {
+                    ShoppingMgnt shoppingMgnt = new ShoppingMgnt(resultSet.getString(1), resultSet.getString(2),
+                            resultSet.getString(3), resultSet.getString(4), resultSet.getString(5));
+                    allData.add(shoppingMgnt);
+                }
+            }
+            resultSet.close();
+            pstms.close();
+
+        }catch (SQLException sqlException){
+            System.err.println("Error in getMonthExpense");
+            sqlException.printStackTrace();
+        }
+
+        return String.valueOf(allData).replace("[","").replace(", ","").replace("]","");
+
+    }
+
     public String getProductPrice()  {
         String sqlQuery = "Select * From shopping";
         List<ShoppingMgnt> productPrice = new ArrayList<>();
@@ -81,9 +104,6 @@ public class MariaDB implements IDB{
         }
         return String.valueOf(productPrice).replace("[","").replace(",","\b").replace("]","");
     }
-
-
-
 
     public void updateDB(String product, String price, String company, String note) {
 
@@ -115,12 +135,10 @@ public class MariaDB implements IDB{
             while (resultSet.next()) {
                 ShoppingMgnt prices = new ShoppingMgnt(resultSet.getString(2));
                 priceSum.add(Double.parseDouble(prices.getPrice()));
-
             }
             for (Double looper : priceSum) {
                 sum += looper;
             }
-
             resultSet.close();
             pstmt.close();
 
@@ -147,12 +165,10 @@ public class MariaDB implements IDB{
             }
             resultSet.close();
             pstms.close();
-
         }catch (SQLException sqlException){
             System.err.println("Error in read all");
             sqlException.printStackTrace();
         }
-
         return String.valueOf(monthlyData).replace("[","").replace(", ","").replace("]","");
     }
 
@@ -170,15 +186,12 @@ public class MariaDB implements IDB{
                     ShoppingMgnt prices = new ShoppingMgnt(resultSet.getString(2));
                     monthlySum.add(Double.parseDouble(prices.getPrice()));
                 }
-
             }
             for (Double looper : monthlySum) {
                 sum += looper;
             }
-
             resultSet.close();
             pstmt.close();
-
         }catch (SQLException sqlException){
             System.err.println("SQLException sumAllMoneySpend");
         }
@@ -210,7 +223,6 @@ public class MariaDB implements IDB{
             System.err.println("Error in read all");
             sqlException.printStackTrace();
         }
-
         return String.valueOf(monthlyGeneralData).replace("[","").replace(", ","").replace("]","");
     }
 
@@ -228,12 +240,10 @@ public class MariaDB implements IDB{
                     ShoppingMgnt prices = new ShoppingMgnt(resultSet.getString(2));
                     monthlySum.add(Double.parseDouble(prices.getPrice()));
                 }
-
             }
             for (Double looper : monthlySum) {
                 sum += looper;
             }
-
             resultSet.close();
             pstmt.close();
 
