@@ -4,68 +4,68 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class OperationsTest {
+class FunctionsTest {
 
     //simulating message sent
     String input = "alexa 350 amazon this is a note";
     String input2 = "computer 270 ksp this is second note yap";
     String input3 = "פנקו 70 כללי זה פתק רק בעברית";
     //
-    Operations operations = new Operations();
+    Functions functions = new Functions();
 
     @Test
     void getPriceCheck(){
         //implementing the method
-        String price = operations.getPrice(input);
+        String price = functions.getPriceFromInput(input);
         //testing
         assertThat(price).isEqualTo("350");
     }
 
     @Test
     void getPriceSecondCheck(){
-        String price = operations.getPrice(input2);
+        String price = functions.getPriceFromInput(input2);
         assertThat(price).isEqualTo("270");
     }
     @Test
     void getPriceThirdInput(){
-        String price = operations.getPrice(input3);
+        String price = functions.getPriceFromInput(input3);
         assertThat(price).isEqualTo("70");
     }
 
     @Test
     void getProductTest(){
         //implementing the method
-        String product = operations.getProduct(input);
+        String product = functions.getProductFromInput(input);
         //testing
         assertThat(product).isEqualTo("alexa");
     }
     @Test
     void getProductSecondTest(){
-        String product = operations.getProduct(input2);
+        String product = functions.getProductFromInput(input2);
         assertThat(product).isEqualTo("computer");
     }
     @Test
     void getProductThirdTest(){
-        String product = operations.getProduct(input3);
+        String product = functions.getProductFromInput(input3);
         assertThat(product).isEqualTo("פנקו");
     }
 
     @Test
     void getCompanyTest(){
         //implementing the method
-        String company = operations.getCompany(input);
+        String company = functions.getCompanyFromInput(input);
         //testing
         assertThat(company).isEqualTo("amazon");
     }
 
     @Test
     void getCompanySecondTest(){
-        String company = operations.getCompany(input2);
+        String company = functions.getCompanyFromInput(input2);
         assertThat(company).isEqualTo("ksp");
     }
     @Test
     void getCompanyThirdTest(){
-        String product = operations.getCompany(input3);
+        String product = functions.getCompanyFromInput(input3);
         assertThat(product).isEqualTo("כללי");
     }
 
@@ -74,21 +74,21 @@ class OperationsTest {
     @Test
     void getNoteTest(){
         //implementing the method
-        StringBuilder note = operations.getNote(input);
+        StringBuilder note = functions.getNoteFromInput(input);
         //testing
         assertThat(String.valueOf(note)).isEqualTo("this is a note");
     }
     @Test
     void getNoteSecondTest(){
         //implementing the method
-        StringBuilder note = operations.getNote(input2);
+        StringBuilder note = functions.getNoteFromInput(input2);
         //testing
         assertThat(String.valueOf(note)).isEqualTo("this is second note yap");
     }
     @Test
     void getNoteThirdTest(){
         //implementing the method
-        StringBuilder note = operations.getNote(input3);
+        StringBuilder note = functions.getNoteFromInput(input3);
         //testing
         assertThat(String.valueOf(note)).isEqualTo("זה פתק רק בעברית");
     }
@@ -96,25 +96,25 @@ class OperationsTest {
     @Test
     void isNumericTest(){
         //implementing the method
-        boolean numCheck = operations.isNumeric(operations.getPrice(input));
+        boolean numCheck = functions.isNumeric(functions.getPriceFromInput(input));
         //testing
         assertThat(numCheck).isTrue();
     }
 
     @Test
     void isNumericSecondTest(){
-        boolean checkIfNum = operations.isNumeric(operations.getPrice(input2));
+        boolean checkIfNum = functions.isNumeric(functions.getPriceFromInput(input2));
         assertThat(checkIfNum).isTrue();
     }
     @Test
     void isNotNumericCheck(){
-        boolean shouldNotBeNumeric = operations.isNumeric(operations.getCompany(input));
+        boolean shouldNotBeNumeric = functions.isNumeric(functions.getCompanyFromInput(input));
         assertThat(shouldNotBeNumeric).isFalse();
     }
 
     @Test
     void isNumericThirdTest(){
-        boolean shouldBeNumeric = operations.isNumeric(operations.getPrice(input3));
+        boolean shouldBeNumeric = functions.isNumeric(functions.getPriceFromInput(input3));
         assertThat(shouldBeNumeric).isTrue();
     }
 

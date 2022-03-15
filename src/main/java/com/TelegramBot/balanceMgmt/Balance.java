@@ -2,6 +2,7 @@ package com.TelegramBot.balanceMgmt;
 
 import com.TelegramBot.db.MariaDB;
 
+
 public class Balance {
     private final double salary = 17350;
     private static double balance;
@@ -10,7 +11,7 @@ public class Balance {
 
 
     public Double getBalance(){
-        return salary - Double.parseDouble(db.getMonthlySpent());
+        return salary - Double.parseDouble(db.getTotalMonthSpending());
     }
 
     public void addToBalance(String num){

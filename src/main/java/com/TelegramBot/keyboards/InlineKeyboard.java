@@ -5,130 +5,64 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InlineKeyboard {
 
     public InlineKeyboard() {}
 
-
-    public void adminKeyboard(SendMessage message){
-
-        InlineKeyboardMarkup adminInlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> adminKeyboard = new ArrayList<>();
-        List<InlineKeyboardButton> adminButton = new ArrayList<>();
-
-        InlineKeyboardButton chatID = new InlineKeyboardButton("ChatID");
-        chatID.setCallbackData("SendChatId.admin-" + message.getChatId());
-        adminButton.add(chatID);
-
-        InlineKeyboardButton dbStatus = new InlineKeyboardButton("DBStatus");
-        dbStatus.setCallbackData("checkDBS.admin");
-        adminButton.add(dbStatus);
-
-        adminKeyboard.add(adminButton);
-
-        adminInlineKeyboardMarkup.setKeyboard(adminKeyboard);
-        message.setReplyMarkup(adminInlineKeyboardMarkup);
+    private InlineKeyboardButton setNewButton(String text,String callback){
+        InlineKeyboardButton button = new InlineKeyboardButton(text);
+        button.setCallbackData(callback);
+        return button;
+    }
+    private InlineKeyboardMarkup setNewKeyboard(List<List<InlineKeyboardButton>> rows){
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+        return markup;
     }
 
-    public void monthKeyboard(SendMessage message){
-        InlineKeyboardMarkup monthKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsList = new ArrayList<>();
-        List<InlineKeyboardButton> monthRows = new ArrayList<>();
+    @SafeVarargs
+    private List<List<InlineKeyboardButton>> setNewRows(List<InlineKeyboardButton>... lists){
+        List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<>();
+        Collections.addAll(keyboardRows, lists);
+        return keyboardRows;
+    }
 
-        for (int i = 1; i <= 12; i++ ){
-           InlineKeyboardButton monthNum = new InlineKeyboardButton(String.valueOf(i));
-           monthNum.setCallbackData(String.valueOf(i));
-            monthRows.add(monthNum);
-           if (i % 3 == 0){
-               rowsList.add(monthRows);
-               monthRows = new ArrayList<>();
-           }
-        }
-        monthKeyboardMarkup.setKeyboard(rowsList);
-        message.setReplyMarkup(monthKeyboardMarkup);
+    public void adminKeyboard(SendMessage message){
+        List<InlineKeyboardButton> adminButton = new ArrayList<>();
+        adminButton.add(setNewButton("ChatID","SendChatId.admin-" + message.getChatId()));
+        adminButton.add(setNewButton("DBStatus","checkDBS.admin"));
+        message.setReplyMarkup(setNewKeyboard(setNewRows(adminButton)));
     }
 
     public void monthlyCategory(SendMessage message){
-        InlineKeyboardMarkup monthlyCategory = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<InlineKeyboardButton> buttons = new ArrayList<>();
-        List<InlineKeyboardButton> buttonsSecondRow = new ArrayList<>();
-        List<InlineKeyboardButton> buttonThirdRow = new ArrayList<>();
-
-        InlineKeyboardButton fuel = new InlineKeyboardButton("Fuel");
-        fuel.setCallbackData("monthlyCategory.fuel");
-        buttons.add(fuel);
-
-        InlineKeyboardButton homeShopping = new InlineKeyboardButton("House");
-        homeShopping.setCallbackData("monthlyCategory.homeShopping");
-        buttons.add(homeShopping);
-
-        InlineKeyboardButton internetShopping = new InlineKeyboardButton("Shopping");
-        internetShopping.setCallbackData("monthlyCategory.internetShopping");
-        buttonsSecondRow.add(internetShopping);
-
-
-        InlineKeyboardButton food = new InlineKeyboardButton("Food");
-        food.setCallbackData("monthlyCategory.Food");
-        buttonsSecondRow.add(food);
-
-        InlineKeyboardButton general = new InlineKeyboardButton("General");
-        general.setCallbackData("monthlyCategory.General");
-        buttonThirdRow.add(general);
-
-        InlineKeyboardButton allMonthlyExpenses = new InlineKeyboardButton("All");
-        allMonthlyExpenses.setCallbackData("monthlyCategory.All");
-        buttonThirdRow.add(allMonthlyExpenses);
-
-        rowList.add(buttons);
-        rowList.add(buttonsSecondRow);
-        rowList.add(buttonThirdRow);
-        monthlyCategory.setKeyboard(rowList);
-        message.setReplyMarkup(monthlyCategory);
-
+        List<InlineKeyboardButton> firstRow = new ArrayList<>();
+        List<InlineKeyboardButton> secondRow = new ArrayList<>();
+        List<InlineKeyboardButton> thirdRow = new ArrayList<>();
+        firstRow.add(setNewButton("Fuel","monthlyCategory-Fuel"));
+        firstRow.add(setNewButton("House","monthlyCategory-House Shopping"));
+        secondRow.add(setNewButton("Shopping","monthlyCategory-Shopping"));
+        secondRow.add(setNewButton("Food","monthlyCategory-Food"));
+        thirdRow.add(setNewButton("General","monthlyCategory-General"));
+        message.setReplyMarkup(setNewKeyboard(setNewRows(firstRow,secondRow,thirdRow)));
     }
 
     public void monthlySum(SendMessage message){
-        InlineKeyboardMarkup monthlySum = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<InlineKeyboardButton> buttons = new ArrayList<>();
-        List<InlineKeyboardButton> buttonsSecondRow = new ArrayList<>();
-        List<InlineKeyboardButton> buttonThirdRow = new ArrayList<>();
-
-        InlineKeyboardButton fuel = new InlineKeyboardButton("Fuel");
-        fuel.setCallbackData("monthlySum.fuel");
-        buttons.add(fuel);
-
-        InlineKeyboardButton homeShopping = new InlineKeyboardButton("House");
-        homeShopping.setCallbackData("monthlySum.homeShopping");
-        buttons.add(homeShopping);
-
-        InlineKeyboardButton internetShopping = new InlineKeyboardButton("Shopping");
-        internetShopping.setCallbackData("monthlySum.internetShopping");
-        buttonsSecondRow.add(internetShopping);
-
-
-        InlineKeyboardButton food = new InlineKeyboardButton("Food");
-        food.setCallbackData("monthlySum.Food");
-        buttonsSecondRow.add(food);
-
-        InlineKeyboardButton general = new InlineKeyboardButton("General");
-        general.setCallbackData("monthlySum.General");
-        buttonThirdRow.add(general);
-
-        InlineKeyboardButton allMonthlyExpenses = new InlineKeyboardButton("All");
-        allMonthlyExpenses.setCallbackData("monthlySum.All");
-        buttonThirdRow.add(allMonthlyExpenses);
-
-        rowList.add(buttons);
-        rowList.add(buttonsSecondRow);
-        rowList.add(buttonThirdRow);
-        monthlySum.setKeyboard(rowList);
-        message.setReplyMarkup(monthlySum);
-
+        List<InlineKeyboardButton> firstRow = new ArrayList<>();
+        List<InlineKeyboardButton> secondRow = new ArrayList<>();
+        List<InlineKeyboardButton> thirdRow = new ArrayList<>();
+        firstRow.add(setNewButton("Fuel","monthlySum-Fuel"));
+        firstRow.add(setNewButton("House","monthlySum-House Shopping"));
+        secondRow.add(setNewButton("Shopping","monthlySum-Shopping"));
+        secondRow.add(setNewButton("Food","monthlySum-Food"));
+        thirdRow.add(setNewButton("General","monthlySum-General"));
+        thirdRow.add(setNewButton("All","monthlySum-All"));
+        message.setReplyMarkup(setNewKeyboard(setNewRows(firstRow,secondRow,thirdRow)));
     }
+
+
 
     public void showMonths(SendMessage message){
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
@@ -145,10 +79,24 @@ public class InlineKeyboard {
                 rowList.add(buttons);
                 buttons = new ArrayList<>();
             }
-
         }
         rowList.add(buttons);
         monthsMarkup.setKeyboard(rowList);
         message.setReplyMarkup(monthsMarkup);
     }
+
+    public void showOlderMonthCategory(SendMessage message){
+        List<InlineKeyboardButton> firstRow = new ArrayList<>();
+        List<InlineKeyboardButton> secondRow = new ArrayList<>();
+        List<InlineKeyboardButton> thirdRow = new ArrayList<>();
+        firstRow.add(setNewButton("Fuel","OlderMonth-Fuel"));
+        firstRow.add(setNewButton("House","OlderMonth-House Shopping"));
+        secondRow.add(setNewButton("Shopping","OlderMonth-Shopping"));
+        secondRow.add(setNewButton("Food","OlderMonth-Food"));
+        thirdRow.add(setNewButton("General","OlderMonth-General"));
+        thirdRow.add(setNewButton("All","OlderMonth-All"));
+        message.setReplyMarkup(setNewKeyboard(setNewRows(firstRow,secondRow,thirdRow)));
+    }
+
+
 }

@@ -5,7 +5,7 @@ import com.TelegramBot.db.MariaDB;
 import com.TelegramBot.keyboards.CustomKeyboard;
 import com.TelegramBot.keyboards.InlineKeyboard;
 import com.TelegramBot.utils.Company;
-import com.TelegramBot.utils.Operations;
+import com.TelegramBot.utils.Functions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.SQLException;
@@ -17,84 +17,84 @@ public class Execution {
     Balance balance = new Balance();
     Company company = new Company();
     InlineKeyboard inLine = new InlineKeyboard();
-    Operations operations = new Operations();
+    Functions functions = new Functions();
     MariaDB db = new MariaDB();
 
      public Execution(){}
     
     public void messageHandler(String command, SendMessage message) {
 
-        switch (command.toLowerCase(Locale.ROOT)) {
+        switch (command.toLowerCase(Locale.ROOT).replace("/","")) {
             case "start"->{
-                message.setText(operations.getStartMessage());
+                message.setText(functions.getStartMessage());
                 keyboard.keyboard1(message);
             }
-
             case "expenses" ->{
-                message.setText(operations.getExpenseMessage());
+                message.setText(functions.getExpenseMessage());
             }
             case "refund" ->{
-                message.setText(operations.getRefundMessage());
+                message.setText(functions.getRefundMessage());
             }
             case "balance"->
                     message.setText("Balance: \n"+balance.getStringBalance());
 
             case "monthly spent"-> {
-                message.setText(operations.chooseOptionPrompt());
+                message.setText(functions.chooseOptionPrompt());
                 inLine.monthlySum(message);
                 return;
             }
             case "monthly expenses"->{
-                message.setText(operations.chooseOptionPrompt());
+                message.setText(functions.chooseOptionPrompt());
                 inLine.monthlyCategory(message);
                 return;
             }
             case "overall expenses" -> {
-                message.setText(operations.chooseOptionPrompt());
+                message.setText(functions.chooseOptionPrompt());
                 inLine.showMonths(message);
                 return;
             }
-            case "admin.center.control" -> {
-               message.setText(operations.chooseOptionPrompt());
+            case "admincentercontrol" -> {
+               message.setText(functions.chooseOptionPrompt());
                inLine.adminKeyboard(message);
                return;
            }
+           case "check" -> {
+               message.setText("///");
 
-           case "/show company" -> message.setText(String.valueOf(company.getList()));
+           }
+
+           case "showcompany" -> message.setText(functions.getCompanyFormatter(company.getList()));
 
            default -> message.setText("We are very sorry, this function is not working yet.");
         }
 
         try {
-            if (command.contains("monthlyCategory.")){
-                operations.monthlyCategory(command, message);
-                return;
-            } else if (command.contains("monthlySum.")){
-                operations.monthlySum(command,message);
+            if (command.contains("monthlyCategory-") || command.contains("monthlySum-") ){
+                functions.monthlyCategory(command, message);
                 return;
             }
 
             if (command.contains("monthDbCheck-")){
                 String month = command.split("-")[1];
-                if (db.getMonthExpense(month).isEmpty()){
-                    message.setText("No Expenses this month.");
-                }else
-                    message.setText("Month "+month+" Expenses:\n"+db.getMonthExpense(month));
+                if (db.getMonthByExpense(month).isEmpty()){
+                    message.setText("No Expenses in month "+month+".");
+                }else {
+                    message.setText("Month "+month+" Expenses:\n"+db.getMonthByExpense(month));
+                }
             }
-
             if(command.contains("SendChatId.admin-")){
                 message.setText(command.split("-")[1]);
                 return;
             }
             if (command.equals("checkDBS.admin")){
-                message.setText(operations.dbKeyboardCheck());
+                message.setText(functions.dbKeyboardCheck());
                 return;
             }
 
-            if (command.contains(" ") && company.getList().contains(operations.getCompany(command))) {
-                if (operations.isNumeric(operations.getPrice(command))) {
-                    balance.addToBalance(operations.getPrice(command));
-                    operations.setDbParameter(command);
+            if (command.contains(" ") && company.getList().contains(functions.getCompanyFromInput(command))) {
+                if (functions.isNumeric(functions.getPriceFromInput(command))) {
+                    balance.addToBalance(functions.getPriceFromInput(command));
+                    functions.setDbParameter(command);
                     message.setText("Data added to bot.");
                 }
             }
@@ -114,9 +114,6 @@ public class Execution {
         }
 
     }
-
-
-
 
 }
 
