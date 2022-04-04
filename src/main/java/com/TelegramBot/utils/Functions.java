@@ -1,6 +1,7 @@
 package com.TelegramBot.utils;
 
 import com.TelegramBot.db.MariaDB;
+import com.TelegramBot.keyboards.InlineKeyboard;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -82,7 +83,7 @@ public class Functions {
         return "Choose an option: ";
     }
 
-    public void monthlyCategory(String command, SendMessage message){
+    public void monthlyCategory(String command, SendMessage message)throws SQLException{
         String category = command.split("-")[1];
         String identifier = command.split("-")[0];
         String textFormat = category+":\n";
@@ -90,6 +91,7 @@ public class Functions {
             message.setText("All Expenses: \n" + db.getMonthlyExpenses());
         } else if (identifier.contains("monthlyCategory")) {
             message.setText(textFormat + db.getMonthlyCategoryRecord(categoryChanger(category)));
+
         }
         if (command.equals("monthlySum-All")) {
             message.setText("All Spending:\n" + db.getTotalMonthSpending());
@@ -110,7 +112,6 @@ public class Functions {
         }
         return param;
     }
-
     public String getCompanyFormatter(List<String> companyList){
         return String.valueOf(companyList).replace("[","").replace("]","");
     }

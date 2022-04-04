@@ -9,7 +9,6 @@ import com.TelegramBot.utils.Functions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.SQLException;
-import java.util.Locale;
 
 
 public class Execution {
@@ -24,7 +23,8 @@ public class Execution {
     
     public void messageHandler(String command, SendMessage message) {
 
-        switch (command.toLowerCase(Locale.ROOT).replace("/","")) {
+        try {
+         switch (command.toLowerCase().replace("/","")) {
             case "start"->{
                 message.setText(functions.getStartMessage());
                 keyboard.keyboard1(message);
@@ -58,17 +58,18 @@ public class Execution {
                inLine.adminKeyboard(message);
                return;
            }
-           case "check" -> {
-               message.setText("///");
 
-           }
+            case "showcompany" -> message.setText(functions.getCompanyFormatter(company.getList()));
 
-           case "showcompany" -> message.setText(functions.getCompanyFormatter(company.getList()));
+            case "check" -> {
+                message.setText("Check Mode");
 
-           default -> message.setText("We are very sorry, this function is not working yet.");
+            }
+
+            default -> message.setText("We are very sorry, this function is not working yet.");
         }
 
-        try {
+
             if (command.contains("monthlyCategory-") || command.contains("monthlySum-") ){
                 functions.monthlyCategory(command, message);
                 return;
@@ -109,7 +110,9 @@ public class Execution {
             System.err.println("No Connection to DB");
             message.setText("No Connection to DB");
         } catch(Exception e){
-            System.err.println("exception");
+            message.setText("Some Problem occurred");
+            System.err.println("exception\n");
+            e.printStackTrace();
 
         }
 

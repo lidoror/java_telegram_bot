@@ -1,9 +1,10 @@
 package com.TelegramBot.keyboards;
 
+import com.TelegramBot.db.MariaDB;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,6 @@ public class InlineKeyboard {
         markup.setKeyboard(rows);
         return markup;
     }
-
     @SafeVarargs
     private List<List<InlineKeyboardButton>> setNewRows(List<InlineKeyboardButton>... lists){
         List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<>();
@@ -97,6 +97,32 @@ public class InlineKeyboard {
         thirdRow.add(setNewButton("All","OlderMonth-All"));
         message.setReplyMarkup(setNewKeyboard(setNewRows(firstRow,secondRow,thirdRow)));
     }
+
+    public void showTransactionAsInline(SendMessage message)throws SQLException {
+        MariaDB db = new MariaDB();
+        InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        List<InlineKeyboardButton> buttons = new ArrayList<>();
+
+        for (int i = 0; i < db.getProduct().size();i++){
+            String buttonTextFormat = db.getProduct().get(i)+" "+db.getPrice().get(i);
+
+            if (i % 3 == 0 && i != 0){
+                rowList.add(buttons);
+                buttons = new ArrayList<>();
+            }
+            buttons.add(setNewButton(buttonTextFormat,"/"));
+        }
+        rowList.add(buttons);
+        monthsMarkup.setKeyboard(rowList);
+        message.setReplyMarkup(monthsMarkup);
+    }
+
+
+
+
+
+
 
 
 }

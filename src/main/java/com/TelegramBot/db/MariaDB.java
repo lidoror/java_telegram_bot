@@ -1,20 +1,23 @@
 package com.TelegramBot.db;
 
 import com.TelegramBot.utils.Functions;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 public class MariaDB implements IDB{
 
-    private final String rootConnection = "jdbc:mariadb://localhost:3333/bot?"+
-    "user=root&password=***REMOVED***&serverTimezone=UTC";
+    private final String rootConnection = "jdbc:mariadb://localhost:3306/bot?"+
+    "user=root&password=Oranim14265!&serverTimezone=UTC";
     private final String selectAllShopping = "Select * From shopping";
-
 
     public MariaDB(){}
 
@@ -28,14 +31,28 @@ public class MariaDB implements IDB{
             pstmt.setString(3,company);
             pstmt.setString(4, note);
             pstmt.setString(5, String.valueOf(LocalDate.now()));
+            pstmt.setLong(1,getLastIndex()+1);
             pstmt.executeUpdate();
-
             pstmt.close();
         } catch (SQLException sqlException) {
             System.err.println("SQL error insertion error");
             sqlException.printStackTrace();
         }
     }
+
+    private Long getLastIndex()throws SQLException{
+        Long lastIndex = null;
+        try(Connection connection = getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(selectAllShopping);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                lastIndex = resultSet.getLong(1);
+            }
+        }
+        return lastIndex;
+    }
+
+
 
     @Override
     public String readAll() {
@@ -62,6 +79,7 @@ public class MariaDB implements IDB{
         return connection;
     }
 
+
     public boolean checkConnection() throws SQLException{
         Connection Connection = 
                 DriverManager.getConnection(rootConnection);
@@ -76,7 +94,7 @@ public class MariaDB implements IDB{
 
         while (resultSet.next()){
             ShoppingMgmt shoppingMgmt = new ShoppingMgmt(resultSet.getString(1) , resultSet.getString(2),
-                    resultSet.getString(3), resultSet.getString(4),resultSet.getString(5));
+                    resultSet.getString(3), resultSet.getString(4),resultSet.getString(5),resultSet.getInt(6));
             records.add(shoppingMgmt);
         }
         resultSet.close();
@@ -95,75 +113,55 @@ public class MariaDB implements IDB{
         return records;
     }
 
+
     private String listOutputFormatter(List<ShoppingMgmt> listToFormat){
         return String.valueOf(listToFormat).replace("[","").replace(", ","").replace("]","");
     }
 
-    public String getMonthByExpense(String month){
-        List<ShoppingMgmt> dataByMonth = new ArrayList<>();
-        try {
-            dataByMonth = getRecordsAsList().stream().filter(date -> date.getPurchaseDate().split("-")[1].contains(month)).collect(Collectors.toList());
-
-        }catch (SQLException sqlException){
-            System.err.println("Error in getMonthExpense");
-        }
-        return listOutputFormatter(dataByMonth);
+    public String getMonthByExpense(String month) throws SQLException {
+        return listOutputFormatter(Optional.of(getRecordsAsList().stream()
+                .filter(date -> date.getPurchaseDate().split("-")[1].contains(month))
+                .collect(Collectors.toList())).orElseThrow(()->new SQLException("Exception in getMonthByExpenses")));
     }
 
-
-
-    public String getMonthlyExpenses() {
+    public String getMonthlyExpenses() throws SQLException {
         Functions functions = new Functions();
-        List<ShoppingMgmt> monthlyData = new ArrayList<>();
-        try {
-            monthlyData = getRecordsAsList().stream()
-                    .filter(date -> functions.checkForCurrentMonth(date.getPurchaseDate())).collect(Collectors.toList());
-
-        }catch (SQLException sqlException){
-            System.err.println("Error in getMonthlyExpensesNew");
-        }
-        return listOutputFormatter(monthlyData);
+        return listOutputFormatter(Optional.of(getRecordsAsList().stream()
+                .filter(date -> functions.checkForCurrentMonth(date.getPurchaseDate()))
+                .collect(Collectors.toList())).orElseThrow(()->new SQLException("Exception in getMonthlyExpenses")));
     }
 
-
-    public String getTotalMonthSpending(){
+    public String getTotalMonthSpending() throws SQLException {
         Functions functions = new Functions();
-        double listSum = 0.0;
-        try {
-            List<String> prices = getRecordsAsList().stream().filter(date -> functions.checkForCurrentMonth(date.getPurchaseDate()))
-                    .map(ShoppingMgmt::getPrice).collect(Collectors.toList());
-
-            listSum = prices.stream().mapToDouble(Double::parseDouble).sum();
-
-        }catch (SQLException sqlException){
-            System.err.println("Error in getTotalMonthSpending");
-        }
-        return String.valueOf(listSum);
+        return String.valueOf(Optional.of(getRecordsAsList().stream().filter(date -> functions.checkForCurrentMonth(date.getPurchaseDate()))
+                .map(ShoppingMgmt::getPrice).mapToDouble(Double::parseDouble).sum()).orElseThrow(()-> new SQLException("Exception in getTotalSpending")));
     }
 
-    private List<ShoppingMgmt> getMonthlyCategoryAsList(String category){
-        List<ShoppingMgmt> monthlyCatagoryData = new ArrayList<>();
+    private List<ShoppingMgmt> getMonthlyCategoryAsList(String category)throws SQLException{
         Functions functions = new Functions();
-        try {
-            monthlyCatagoryData = getRecordsAsList().stream()
-                    .filter(filter -> functions.checkForCurrentMonth(filter.getPurchaseDate()) && filter.getCompany().equals(category))
-                    .collect(Collectors.toList());
-        }catch (SQLException sqlException){
-            System.err.println("Error in getMonthlyCategoryRecord");
+        return Optional.of(getRecordsAsList().stream()
+                .filter(filter -> functions.checkForCurrentMonth(filter.getPurchaseDate()) && filter.getCompany().equals(category))
+                .collect(Collectors.toList())).orElseThrow(()-> new SQLException("Exception in getMonthlyCategoryAsList"));
         }
-        return monthlyCatagoryData;
-    }
 
-    public String getMonthlyCategoryRecord(String category){
+    public String getMonthlyCategoryRecord(String category)throws SQLException{
         return listOutputFormatter(getMonthlyCategoryAsList(category));
     }
 
-    public String getCategoryMonthlySpent(String category){
-        List<String> monthlyCategorySum = getMonthlyCategoryAsList(category).stream().map(ShoppingMgmt::getPrice).collect(Collectors.toList());
-        double sum = monthlyCategorySum.stream().mapToDouble(Double::parseDouble).sum();
-        return String.valueOf(sum);
+    public String getCategoryMonthlySpent(String category) throws SQLException{
+        return String.valueOf(getMonthlyCategoryAsList(category).stream().map(ShoppingMgmt::getPrice).mapToDouble(Double::parseDouble).sum());
     }
 
+    public List<String> getProduct()throws SQLException{
+        Functions functions = new Functions();
+        return getRecordsAsList().stream().filter(product -> functions.checkForCurrentMonth(product.getPurchaseDate()))
+                .map(ShoppingMgmt::getProduct).collect(Collectors.toList());
+    }
 
+    public List<String> getPrice()throws SQLException{
+        Functions functions = new Functions();
+        return getRecordsAsList().stream().filter(price -> functions.checkForCurrentMonth(price.getPurchaseDate()))
+                .map(ShoppingMgmt::getPrice).collect(Collectors.toList());
+    }
 
 }
