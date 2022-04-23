@@ -6,12 +6,13 @@ import java.sql.SQLException;
 
 public class Balance {
     private final double salary = 17350;
-    private static double balance;
+    private double balance;
 
     MariaDB db = new MariaDB();
 
     public Double getBalance()throws SQLException {
-        return salary - Double.parseDouble(db.getTotalMonthSpending());
+        balance = salary - Double.parseDouble(db.getTotalMonthSpending());
+        return balance;
     }
 
     public void addToBalance(String num){
@@ -19,9 +20,6 @@ public class Balance {
 
     }
 
-    public String getSalary(){
-        return String.valueOf(salary);
-    }
 
     public String getStringBalance()throws SQLException{
         return String.valueOf(getBalance());
