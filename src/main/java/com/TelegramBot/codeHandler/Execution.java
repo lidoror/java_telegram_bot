@@ -8,6 +8,7 @@ import com.TelegramBot.utils.Company;
 import com.TelegramBot.utils.Const;
 import com.TelegramBot.utils.Functions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import java.sql.SQLException;
 
 
@@ -18,9 +19,10 @@ public class Execution {
     InlineKeyboard inLine = new InlineKeyboard();
     Functions functions = new Functions();
     MariaDB db = new MariaDB();
+
     public Execution() {}
 
-    public void messageHandler(String command, SendMessage message) {
+    public void messageHandler(String command, SendMessage message, Update update) {
 
         try {
             switch (command.toLowerCase().replace("/", "")) {
