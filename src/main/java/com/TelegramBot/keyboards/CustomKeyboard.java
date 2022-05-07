@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CustomKeyboard {
 
-    public void keyboard1(SendMessage message){
+    public void startKeyboard(SendMessage message){
     ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 
     List<KeyboardRow> keyboard = new ArrayList<>();
