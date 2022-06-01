@@ -1,6 +1,7 @@
 package com.TelegramBot.messageHandler;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -20,19 +21,16 @@ public class Bot extends TelegramLongPollingBot {
         return betaBotName;
     }
 
-
-
     @Override
     public String getBotToken() {
         return betaBotToken;
     }
 
-
-
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage message = new SendMessage();
         Execution execution = new Execution();
+        BotApiMethod messageToReturn = message;
         String command;
         boolean updateHasMessage = update.getMessage() != null;
 
@@ -47,14 +45,14 @@ public class Bot extends TelegramLongPollingBot {
 
 
         if (approvedChats.contains(message.getChatId()))
-            execution.messageDispatcher(command, message,update);
+            messageToReturn = execution.messageDispatcher(command, message,update);
 
         else
             message.setText("Sorry some problem occurred");
 
 
         try {
-            execute(message);
+            execute(messageToReturn);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

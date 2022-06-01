@@ -1,7 +1,7 @@
 package com.TelegramBot.balanceMgmt;
 
 import com.TelegramBot.Exception.IllegalSalaryException;
-import com.TelegramBot.db.DatabaseFilter;
+import com.TelegramBot.db.DatabaseListAction;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -14,10 +14,10 @@ public class Balance {
     private static double secondSalary;
     private final double salary = firstSalary + secondSalary;
 
-    DatabaseFilter databaseFilter = new DatabaseFilter();
+    DatabaseListAction databaseListAction = new DatabaseListAction();
 
     public Double getBalance()throws SQLException {
-        balance = salary - Double.parseDouble(databaseFilter.getTotalMonthSpending());
+        balance = salary - Double.parseDouble(databaseListAction.getTotalMonthSpending());
         return balance;
     }
 

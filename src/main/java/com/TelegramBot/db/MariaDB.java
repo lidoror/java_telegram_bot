@@ -1,21 +1,22 @@
 package com.TelegramBot.db;
 
 import com.TelegramBot.utils.FunctionsUtils;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MariaDB implements IDatabase {
 
-    private final String rootConnection = "jdbc:mariadb://localhost:3306/bot?"+
+    private final String rootConnection = "jdbc:mariadb://localhost:3334/bot?"+
     "user=root&password=Oranim14265!&serverTimezone=UTC";
     private final String selectAllShopping = "Select * From shopping";
 
@@ -55,7 +56,7 @@ public class MariaDB implements IDatabase {
     }
 
     private int setNewIndexValue() throws SQLException{
-        List<Integer> columID = DbRecordToList().stream().map(ShoppingMgmtRecord::columID).toList();
+        List<Integer> columID = dbRecordToList().stream().map(ShoppingMgmtRecord::columID).toList();
         return columID.get(columID.size() - 1)+1;
     }
 
@@ -81,7 +82,7 @@ public class MariaDB implements IDatabase {
 
 
     @Override
-    public List<ShoppingMgmtRecord> DbRecordToList() throws SQLException {
+    public List<ShoppingMgmtRecord> dbRecordToList() throws SQLException {
         List<ShoppingMgmtRecord> records = new ArrayList<>();
         try(Connection conn = getDbConnection()){
             getDbDataToShoppingMgmt(records, conn);
@@ -112,14 +113,13 @@ public class MariaDB implements IDatabase {
 
 
 
-    @Override
-    public String DbRecordsToMap(Integer mapKey)throws SQLException{
-
-        Map<Integer, ShoppingMgmtRecord> mapper = new HashMap<>();
-        for (var looper: DbRecordToList()) {
-            mapper.put(looper.columID(), looper);
+    //new implementation instead of getting only the record
+    public Map<Integer,ShoppingMgmtRecord> dbListToMap()throws SQLException{
+        Map<Integer,ShoppingMgmtRecord> dbRecordMap = new HashMap<>();
+        for (var record:dbRecordToList()) {
+            dbRecordMap.put(record.columID(),record);
         }
-        return String.valueOf(mapper.get(mapKey));
+        return dbRecordMap;
     }
 
 
