@@ -1,28 +1,52 @@
 package com.TelegramBot.balanceMgmt;
 
-import com.TelegramBot.db.MariaDB;
+import com.TelegramBot.Exception.IllegalSalaryException;
+import com.TelegramBot.db.DatabaseListAction;
+
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 
 public class Balance {
-    private final double salary = 17350;
-    private double balance;
-    MariaDB db = new MariaDB();
 
-    public Balance(){}
+    private double balance;
+    private static double firstSalary;
+    private static double secondSalary;
+    private final double salary = firstSalary + secondSalary;
+
+    DatabaseListAction databaseListAction = new DatabaseListAction();
 
     public Double getBalance()throws SQLException {
-        balance = salary - Double.parseDouble(db.getTotalMonthSpending());
+        balance = salary - Double.parseDouble(databaseListAction.getTotalMonthSpending());
         return balance;
     }
 
-    public void addToBalance(String num){
-        balance += Double.parseDouble(num);
+    public void addToBalance(String amountToAdd){
+        balance += Double.parseDouble(amountToAdd);
 
     }
 
-
     public String getStringBalance()throws SQLException{
-        return String.valueOf(getBalance());
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return decimalFormat.format(getBalance());
+    }
+
+    public void setFirstSalary(double firstSalary) throws IllegalSalaryException {
+        boolean salaryLessThanZero = firstSalary < 0;
+
+        if (salaryLessThanZero){
+            throw new IllegalSalaryException("Salary cant be under 0");
+        } else
+            Balance.firstSalary = firstSalary;
+    }
+
+    public void setSecondSalary(double secondSalary)throws IllegalSalaryException{
+        boolean salaryLessThanZero = firstSalary < 0;
+
+        if (salaryLessThanZero){
+            throw new IllegalSalaryException("Salary cant be under 0");
+        } else
+            Balance.secondSalary = secondSalary;
+
     }
 }

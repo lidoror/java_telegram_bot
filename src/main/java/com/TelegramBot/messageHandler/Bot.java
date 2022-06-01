@@ -1,10 +1,10 @@
-package com.TelegramBot.codeHandler;
+package com.TelegramBot.messageHandler;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.util.List;
 
 
@@ -14,26 +14,23 @@ public class Bot extends TelegramLongPollingBot {
     private final String betaBotToken = "***REMOVED***";
     private final String betaBotName = "BetaTestingBot";
     private final List<String> approvedChats = List.of(***REMOVED***);
+
+
     @Override
-
-
     public String getBotUsername() {
         return betaBotName;
     }
-
-
 
     @Override
     public String getBotToken() {
         return betaBotToken;
     }
 
-
-
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage message = new SendMessage();
         Execution execution = new Execution();
+        BotApiMethod messageToReturn = message;
         String command;
         boolean updateHasMessage = update.getMessage() != null;
 
@@ -48,14 +45,14 @@ public class Bot extends TelegramLongPollingBot {
 
 
         if (approvedChats.contains(message.getChatId()))
-            execution.messageHandler(command, message,update);
+            messageToReturn = execution.messageDispatcher(command, message,update);
 
         else
-            message.setText("User not approved");
+            message.setText("Sorry some problem occurred");
 
 
         try {
-            execute(message);
+            execute(messageToReturn);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
