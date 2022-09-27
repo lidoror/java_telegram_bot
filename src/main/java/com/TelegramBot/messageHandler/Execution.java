@@ -3,6 +3,7 @@ package com.TelegramBot.messageHandler;
 import com.TelegramBot.db.DatabaseListAction;
 import com.TelegramBot.db.IDatabase;
 import com.TelegramBot.db.MariaDB;
+import com.TelegramBot.db.Postgres;
 import com.TelegramBot.keyboards.InlineKeyboard;
 import com.TelegramBot.utils.FunctionsUtils;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -20,7 +21,8 @@ public class Execution {
 
     InlineKeyboard inLine = new InlineKeyboard();
     messageDispatcher messageDispatcher = new messageDispatcher();
-    IDatabase database = new MariaDB();
+    //IDatabase database = new MariaDB();
+    IDatabase database = new Postgres();
     DatabaseListAction databaseListAction = new DatabaseListAction();
 
     public Execution() {

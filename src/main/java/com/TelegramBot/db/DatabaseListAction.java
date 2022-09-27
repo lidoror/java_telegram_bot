@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 
 public class DatabaseListAction {
 
-    IDatabase database = new MariaDB();
+//    IDatabase database = new MariaDB();
+    IDatabase database = new Postgres();
 
     public DatabaseListAction(){}
 

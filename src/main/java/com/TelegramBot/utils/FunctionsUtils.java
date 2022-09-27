@@ -132,7 +132,7 @@ public class FunctionsUtils {
     public static String approvedCompanyFormatter(List<String> companyList) {
         return String.valueOf(companyList).replace("[", "").replace("]", "");
     }
-
+    //TODO get record as list throw exception if db is empty
     public static void inputInsertionAndValidation(String command, SendMessage message, IDatabase database) throws SQLException {
         Balance balance = new Balance();
         int sizeBeforeDataInsertion = database.dbRecordToList().size();
