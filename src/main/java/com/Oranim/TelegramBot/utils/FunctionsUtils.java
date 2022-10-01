@@ -20,6 +20,7 @@ import java.util.List;
 public class FunctionsUtils {
 
 
+
     @NotNull
     public static String generateProductCostFromInput(String price) {
         return price.split(" ")[1];

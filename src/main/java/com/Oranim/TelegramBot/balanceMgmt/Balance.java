@@ -16,17 +16,17 @@ public class Balance {
 
     DatabaseListAction databaseListAction = new DatabaseListAction();
 
-    public Double getBalance()throws SQLException {
+    public Double getBalance() throws SQLException {
         balance = salary - Double.parseDouble(databaseListAction.getTotalMonthSpending());
         return balance;
     }
 
-    public void addToBalance(String amountToAdd){
+    public void addToBalance(String amountToAdd) {
         balance += Double.parseDouble(amountToAdd);
 
     }
 
-    public String getStringBalance()throws SQLException{
+    public String getStringBalance() throws SQLException {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         return decimalFormat.format(getBalance());
     }
@@ -34,19 +34,21 @@ public class Balance {
     public void setFirstSalary(double firstSalary) throws IllegalSalaryException {
         boolean salaryLessThanZero = firstSalary < 0;
 
-        if (salaryLessThanZero){
+        if (salaryLessThanZero) {
             throw new IllegalSalaryException("Salary cant be under 0");
-        } else
-            Balance.firstSalary = firstSalary;
+        }
+
+        Balance.firstSalary = firstSalary;
     }
 
-    public void setSecondSalary(double secondSalary)throws IllegalSalaryException{
+    public void setSecondSalary(double secondSalary) throws IllegalSalaryException {
         boolean salaryLessThanZero = firstSalary < 0;
 
-        if (salaryLessThanZero){
+        if (salaryLessThanZero) {
             throw new IllegalSalaryException("Salary cant be under 0");
-        } else
-            Balance.secondSalary = secondSalary;
+        }
+
+        Balance.secondSalary = secondSalary;
 
     }
 }
