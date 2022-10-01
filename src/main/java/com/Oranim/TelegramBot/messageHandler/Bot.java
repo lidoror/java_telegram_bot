@@ -1,33 +1,39 @@
 package com.Oranim.TelegramBot.messageHandler;
 
+import com.Oranim.TelegramBot.utils.BotLogging;
+import lombok.extern.log4j.Log4j;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 
 public class Bot extends TelegramLongPollingBot {
-    private final String botToken = "***REMOVED***";
-    private final String botName = "MYBionicBot";
-    private final String betaBotToken = "***REMOVED***";
-    private final String betaBotName = "BetaTestingBot";
-    private final List<String> approvedChats = List.of(***REMOVED***);
+    private final String botName = System.getenv("BOT_NAME");
+    private final String botToken = System.getenv("BOT_TOKEN");
+    private final List<String> approvedChats = List.of("561947096", "1072526175", "-686089090");
 
-    public Bot()  {
+
+    public Bot() {
     }
 
 
     @Override
     public String getBotUsername() {
-        return betaBotName;
+        return botName;
     }
 
     @Override
     public String getBotToken() {
-        return betaBotToken;
+        return botToken;
     }
 
     @Override
@@ -41,24 +47,31 @@ public class Bot extends TelegramLongPollingBot {
         if (updateHasMessage) {
             command = update.getMessage().getText();
             message.setChatId(String.valueOf(update.getMessage().getChatId()));
-        }
-        else {
+        } else {
             command = update.getCallbackQuery().getData();
             message.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
         }
 
 
-        if (approvedChats.contains(message.getChatId()))
-            messageToReturn = execution.messageDispatcher(command, message,update);
+        if (approvedChats.contains(message.getChatId())) {
+            BotLogging.setInfoLog(classLog(message.getChatId(),"approved",Bot.class.getName()));
+            messageToReturn = execution.messageDispatcher(command, message, update);
 
-        else
+
+        } else {
+            BotLogging.setInfoLog(classLog(message.getChatId(),"dissapproved",Bot.class.getName()));
             message.setText("Sorry some problem occurred");
-
+        }
 
         try {
             execute(messageToReturn);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+
+
+    }
+    private String classLog(String logParameters , String approval , String className){
+        return "Chat number %s was %s at class %s".formatted(logParameters,approval,className);
     }
 }
