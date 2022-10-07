@@ -2,12 +2,13 @@ package com.Oranim.TelegramBot.messageHandler;
 
 import com.Oranim.TelegramBot.db.DatabaseListAction;
 import com.Oranim.TelegramBot.db.IDatabase;
-import com.Oranim.TelegramBot.db.Postgres;
+import com.Oranim.TelegramBot.db.MariaDB;
 import com.Oranim.TelegramBot.keyboards.InlineKeyboard;
 import com.Oranim.TelegramBot.utils.FunctionsUtils;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Execution {
 
     InlineKeyboard inLine = new InlineKeyboard();
     messageDispatcher messageDispatcher = new messageDispatcher();
-    IDatabase database = new Postgres();
+    IDatabase database = new MariaDB();
     DatabaseListAction databaseListAction = new DatabaseListAction();
 
     public Execution() {
@@ -54,8 +55,8 @@ public class Execution {
         return message;
     }
 
-    private boolean listContainArg(String arg){
-        for (var message: editedMessageList) {
+    private boolean listContainArg(String arg) {
+        for (var message : editedMessageList) {
             if (arg.contains(message)) {
                 return true;
             }

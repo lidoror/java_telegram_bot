@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Deprecated
 public class MariaDB implements IDatabase {
 
     private final String rootConnection = "jdbc:mariadb://localhost:3334/bot?"+

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class DatabaseListAction {
 
 
-    IDatabase database = new Postgres();
+    IDatabase database = new MariaDB();
 
     public DatabaseListAction(){}
 
