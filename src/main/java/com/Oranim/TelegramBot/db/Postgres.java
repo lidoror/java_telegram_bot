@@ -10,15 +10,14 @@ import java.util.Map;
 
 public class Postgres implements IDatabase {
     //container port 172.17.0.4
-    private final String postgresURL = "jdbc:postgresql://localhost:2468/db";
-    private final String dbUser = "***REMOVED***";
-    private final String dbPass = "Oranim14265!";
+    private final String postgresURL = System.getenv("POSTGRES.URL");
+
 
 
     private Connection getDbConnection(){
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(postgresURL,dbUser,dbPass);
+            connection = DriverManager.getConnection(postgresURL);
 
         } catch (SQLException e) {
             System.err.println("Exception postgres Class Connection method");
@@ -106,7 +105,7 @@ public class Postgres implements IDatabase {
     @Override
     public boolean checkConnection() throws SQLException{
         Connection connection =
-                DriverManager.getConnection(postgresURL,dbUser,dbPass);
+                DriverManager.getConnection(postgresURL);
         boolean isValid = connection.isValid(2);
         connection.close();
         return isValid;

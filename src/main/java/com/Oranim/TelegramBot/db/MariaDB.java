@@ -13,8 +13,7 @@ import java.util.*;
 
 public class MariaDB implements IDatabase {
 
-    private final String rootConnection = "jdbc:mariadb://localhost:3334/bot?"+
-    "user=root&password=Oranim14265!&serverTimezone=UTC";
+    private final String rootConnection = System.getenv("MARIADB.URL");
     private final String selectAllShopping = "Select * From shopping";
 
 
