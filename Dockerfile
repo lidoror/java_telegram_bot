@@ -1,5 +1,7 @@
 FROM openjdk
 
-COPY ./out/artifacts/TelegramBotNew_jar/TelegramBotNew.jar /TelegramBotJar.jar
+WORKDIR /TelgramBot
+
+COPY ./out/artifacts/TelegramBotNew_jar/TelegramBotNew.jar /.
 
 CMD ["java" ,"-jar" , "TelegramBotJar.jar" ]
