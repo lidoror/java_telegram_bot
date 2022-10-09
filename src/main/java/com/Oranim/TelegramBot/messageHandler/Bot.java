@@ -8,9 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -19,11 +17,10 @@ import java.util.logging.Logger;
 public class Bot extends TelegramLongPollingBot {
     private final String botName = System.getenv("BOT_NAME");
     private final String botToken = System.getenv("BOT_TOKEN");
-    private final List<String> approvedChats = List.of("561947096", "1072526175", "-686089090");
+    private final List<String> approvedChats = List.of(System.getenv("APPROVED_CHATS").split(","));
 
 
-    public Bot() {
-    }
+    public Bot() {}
 
 
     @Override
@@ -71,6 +68,7 @@ public class Bot extends TelegramLongPollingBot {
 
 
     }
+
     private String classLog(String logParameters , String approval , String className){
         return "Chat number %s was %s at class %s".formatted(logParameters,approval,className);
     }
