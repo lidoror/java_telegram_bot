@@ -13,7 +13,7 @@ import java.util.*;
 
 public class MariaDB implements IDatabase {
 
-    private final String rootConnection = System.getenv("MARIADB.URL");
+    private final String rootConnection = System.getenv("MARIADB_URL");
     private final String selectAllShopping = "Select * From shopping";
 
 
