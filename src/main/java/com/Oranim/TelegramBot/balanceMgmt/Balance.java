@@ -6,7 +6,7 @@ import com.Oranim.TelegramBot.utils.BotLogging;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
-
+//TODO need to fix this class broke it with salary env env
 public class Balance {
 
     private double balance;
@@ -48,6 +48,7 @@ public class Balance {
         Balance.firstSalary = Double.parseDouble(System.getenv("FIRST_SALARY"));
 
     }
+
 
     public void setSecondSalary(double secondSalary) throws IllegalSalaryException {
 

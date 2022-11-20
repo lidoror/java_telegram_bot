@@ -13,7 +13,6 @@ import com.Oranim.TelegramBot.keyboards.CustomKeyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -41,21 +40,13 @@ public class messageDispatcher {
             case "balance" -> message.setText("Balance: \n" + new Balance().getStringBalance());
 
 
-            case "monthly spent" -> {
-                message = KeyboardBuilders.sendKeyboardToUser(chooseOptionPrompt, inLine.monthlySumKeyboardMarkup(), update);
-            }
+            case "monthly spent" -> message = KeyboardBuilders.sendKeyboardToUser(chooseOptionPrompt, inLine.monthlySumKeyboardMarkup(), update);
 
-            case "monthly expenses" -> {
-                message = KeyboardBuilders.sendKeyboardToUser(chooseOptionPrompt, inLine.monthlyExpensesInlineButtonMarkup(), update);
-            }
+            case "monthly expenses" -> message = KeyboardBuilders.sendKeyboardToUser(chooseOptionPrompt, inLine.monthlyExpensesInlineButtonMarkup(), update);
 
-            case "overall expenses" -> {
-                message = KeyboardBuilders.sendKeyboardToUser(chooseOptionPrompt, inLine.showMonthsIn2022KeyboardMarkup(), update);
-            }
+            case "overall expenses" -> message = KeyboardBuilders.sendKeyboardToUser(chooseOptionPrompt, inLine.showMonthsIn2022KeyboardMarkup(), update);
 
-            case "admincenter" -> {
-                message = KeyboardBuilders.sendKeyboardToUser("Admin keyboard", inLine.adminKeyboardMarkup(message), update);
-            }
+            case "admincenter" -> message = KeyboardBuilders.sendKeyboardToUser("Admin keyboard", inLine.adminKeyboardMarkup(message), update);
 
             case "showcompany" -> message.setText(FunctionsUtils.approvedCompanyFormatter(companyList));
 
@@ -95,9 +86,7 @@ public class messageDispatcher {
             messageText = FunctionsUtils.monthlyCategoryButtonsDispatcher(command, update, databaseListAction);
         }
 
-        if (command.equals("Back-One-Arg")) {
 
-        }
 
         if (command.contains("SendChatId.admin" + Const.INLINE_SEPARATOR)) {
             String chatID = command.split(Const.INLINE_SEPARATOR)[1];

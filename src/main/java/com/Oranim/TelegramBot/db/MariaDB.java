@@ -159,7 +159,7 @@ public class MariaDB implements IDatabase {
     }
 
     private String classLog(String method ,String stackTrace){
-        return "An exception accured in class MariaDB mehtod %s \nStack Tracce:\n %s".formatted(method, stackTrace);
+        return "An exception accured in class %s mehtod %s \nStack Tracce:\n %s".formatted(method,MariaDB.class.getName() , stackTrace);
     }
 
 

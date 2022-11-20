@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  telegrambot:
+    container_name: ***REMOVED***or/telegrambot/v3
+    restart: unless-stopped
+    image: ***REMOVED***or/telegrambot/v3
+    environment:
+      APPROVED_CHATS: ***REMOVED***
+      BOT_NAME: BetaTestingBot
+      BOT_TOKEN: ***REMOVED***
+      MARIADB_URL: jdbc:mariadb://10.1.1.4:3334/bot?user=root&password=Oranim14265!&serverTimezone=UTC
+      FIRST_SALARY: 9450
