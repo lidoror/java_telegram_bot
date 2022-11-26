@@ -13,12 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
 public class FunctionsUtils {
-
 
 
     @NotNull
@@ -102,16 +102,15 @@ public class FunctionsUtils {
         EditMessageText editedKeyboard = null;
 
 
-
         if (identifier.contains("monthlyCategory")) {
             editedKeyboard =
                     KeyboardBuilders.createEditMessageInline(textFormat,
                             inlineKeyboard.listToTransactionInline(databaseListAction
                                     .getMonthlyCategoryRecord(categoryChanger(category))), update);
         }
-        if (command.equals("monthlyCategory-All")){
+        if (command.equals("monthlyCategory-All")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageInline("All Expenses:\n" , inlineKeyboard.listToTransactionInline(databaseListAction.getMonthlyExpensesAsList()),update);
+                    KeyboardBuilders.createEditMessageInline("All Expenses:\n", inlineKeyboard.listToTransactionInline(databaseListAction.getMonthlyExpensesAsList()), update);
         }
 
         if (command.equals("monthlySum-All")) {
@@ -159,29 +158,15 @@ public class FunctionsUtils {
         return String.valueOf(listToFormat).replace("[", "").replace(", ", "").replace("]", "");
     }
 
-    public static void salaryInitializationFromInput(SendMessage message, String command) throws IllegalSalaryException {
-        Balance balance = new Balance();
-
-        if (command.contains("one")) {
-            balance.setFirstSalary(Double.parseDouble(command.split(" ")[2]));
-            message.setText("First salary initialized");
-
-        } else if (command.contains("two")) {
-            balance.setSecondSalary(Double.parseDouble(command.split(" ")[2]));
-            message.setText("Second salary initialized");
-
-        } else
-            message.setText("Salary initialization failed");
-    }
 
     public static List<String> getKeyboardButtonsCommands() {
         return List.of("/start", "expenses", "refund", "balance", "monthly spent",
                 "monthly expenses", "overall expenses", "/showcompany", "admincenter");
     }
 
-    public static String formatNumberMonthsToNames(String month){
+    public static String formatNumberMonthsToNames(String month) {
         String monthToReturn = month;
-        switch (monthToReturn){
+        switch (monthToReturn) {
             case "1" -> monthToReturn = "January ";
             case "2" -> monthToReturn = "February";
             case "3" -> monthToReturn = "March";

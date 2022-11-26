@@ -1,7 +1,5 @@
 package com.Oranim.TelegramBot.utils;
 
-import com.Oranim.TelegramBot.messageHandler.Bot;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

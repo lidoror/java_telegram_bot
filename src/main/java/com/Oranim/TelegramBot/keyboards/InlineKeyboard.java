@@ -15,14 +15,22 @@ public class InlineKeyboard {
 
     public InlineKeyboard() {}
 
-
-    //returns admin keyboard with the ability to see db status and current session chat id
+    /**
+     * this method generate keyboard with admin keys only like check db connection
+     * @param message is the message from the user
+     * @return inline that contain only admin keys
+     */
     public InlineKeyboardMarkup adminKeyboardMarkup(SendMessage message){
         List<InlineKeyboardButton> adminButton = new ArrayList<>();
         adminButton.add(KeyboardBuilders.createNewKeyboardButton("ChatID","SendChatId.admin"+ Const.INLINE_SEPARATOR + message.getChatId()));
         adminButton.add(KeyboardBuilders.createNewKeyboardButton("DBStatus","checkDBS.admin"));
         return KeyboardBuilders.createNewKeyboardFromRows(KeyboardBuilders.createNewKeyboardRows(adminButton));
     }
+
+    /**
+     * this keyboard is the shopping categories
+     * @return inline keyboard with the categories we have
+     */
     public InlineKeyboardMarkup monthlyExpensesInlineButtonMarkup(){
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
@@ -35,7 +43,11 @@ public class InlineKeyboard {
         thirdRow.add(KeyboardBuilders.createNewKeyboardButton("All","monthlyCategory-All"));
         return KeyboardBuilders.createNewKeyboardFromRows(KeyboardBuilders.createNewKeyboardRows(firstRow,secondRow,thirdRow));
     }
-    //return inline keyboard with the total spending of each category
+
+    /**
+     * this keyboard incharge of showing the sum of money spent on each category
+     * @return inline keyboard with the sum of each category
+     */
     public InlineKeyboardMarkup monthlySumKeyboardMarkup(){
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
@@ -49,7 +61,7 @@ public class InlineKeyboard {
         return KeyboardBuilders.createNewKeyboardFromRows(KeyboardBuilders.createNewKeyboardRows(firstRow,secondRow,thirdRow));
     }
 
-
+    //todo this function works only for 2022 need to add anover layer for years
     //showing the months in this year and make inline keyboard for each month
     public InlineKeyboardMarkup showMonthsIn2022KeyboardMarkup(){
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
@@ -108,7 +120,12 @@ public class InlineKeyboard {
         message.setReplyMarkup(monthsMarkup);
     }
 
-
+    /**
+     *
+     * @param list of shopping products
+     * @return the list as inline keyboard
+     * @throws SQLException
+     */
     public InlineKeyboardMarkup listToTransactionInline(List<ShoppingMgmtRecord> list)throws SQLException {
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();

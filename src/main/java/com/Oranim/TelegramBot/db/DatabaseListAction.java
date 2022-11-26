@@ -14,7 +14,12 @@ public class DatabaseListAction {
 
     public DatabaseListAction(){}
 
-
+    /**
+     *
+     * @param month
+     * @return
+     * @throws SQLException
+     */
     public List<ShoppingMgmtRecord> getMonthByExpense(String month) throws SQLException {
         return Optional.of(database.dbRecordToList().stream()
                 .filter(date -> date.purchaseDate().split("-")[1].contains(month))
@@ -61,9 +66,6 @@ public class DatabaseListAction {
         return database.dbRecordToList().stream().filter(price -> FunctionsUtils.checkIfGivenMonthEqualToCurrentMonth(price.purchaseDate()))
                 .map(ShoppingMgmtRecord::price).collect(Collectors.toList());
     }
-    public List<ShoppingMgmtRecord> getCurrentMonthShoppingList()throws SQLException{
-        return database.dbRecordToList().stream().filter(price -> FunctionsUtils.checkIfGivenMonthEqualToCurrentMonth(price.purchaseDate()))
-                .collect(Collectors.toList());
-    }
+
 
 }
