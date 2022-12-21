@@ -32,3 +32,5 @@ src/main/java/com/.DS_Store
 .idea/*
 target/*
 
+vars.json
+TelegramBotNew.iml
