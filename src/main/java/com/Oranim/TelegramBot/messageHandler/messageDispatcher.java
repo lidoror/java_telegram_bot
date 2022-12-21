@@ -10,6 +10,7 @@ import com.Oranim.TelegramBot.utils.Const;
 import com.Oranim.TelegramBot.utils.FunctionsUtils;
 import com.Oranim.TelegramBot.balanceMgmt.Balance;
 import com.Oranim.TelegramBot.keyboards.CustomKeyboard;
+import com.Oranim.TelegramBot.utils.JsonWorkloads;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -59,8 +60,9 @@ public class messageDispatcher {
     public void inLineCallBackHandler(SendMessage message, String command, DatabaseListAction databaseListAction,
                                       List<String> approvedCompanies, IDatabase database) throws SQLException, IllegalSalaryException {
 
-        if (command.contains("salary")) {
-            FunctionsUtils.salaryInitializationFromInput(message, command);
+        if (command.toLowerCase().contains("salary")) {
+            FunctionsUtils.salaryInitializationFromInput(message,command);
+
         }
 
         if (command.contains("GetTransactionInPlace" + Const.INLINE_SEPARATOR)) {

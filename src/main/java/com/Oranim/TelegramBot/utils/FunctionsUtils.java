@@ -2,12 +2,12 @@ package com.Oranim.TelegramBot.utils;
 
 import com.Oranim.TelegramBot.Exception.IllegalSalaryException;
 import com.Oranim.TelegramBot.Exception.NoConnectionToDbException;
-import com.Oranim.TelegramBot.keyboards.InlineKeyboard;
-import com.Oranim.TelegramBot.keyboards.KeyboardBuilders;
 import com.Oranim.TelegramBot.balanceMgmt.Balance;
 import com.Oranim.TelegramBot.db.DatabaseListAction;
 import com.Oranim.TelegramBot.db.IDatabase;
 import com.Oranim.TelegramBot.db.ShoppingMgmtRecord;
+import com.Oranim.TelegramBot.keyboards.InlineKeyboard;
+import com.Oranim.TelegramBot.keyboards.KeyboardBuilders;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 public class FunctionsUtils {
@@ -206,6 +207,22 @@ public class FunctionsUtils {
                 "checkDBS.admin",
                 "SendChatId.admin",
                 "monthDbCheck");
+    }
+
+    public static void salaryInitializationFromInput(SendMessage message, String command) throws IllegalSalaryException {
+        JsonWorkloads jsonWorkloads = new JsonWorkloads();
+        if (command.contains("one")) {
+            String firstSalary = command.split(" ")[2];
+            jsonWorkloads.jsonWriter("First_Salary" , firstSalary , "./vars.json");
+            message.setText("First salary initialized");
+
+        } else if (command.contains("two")) {
+            String secondSalary = command.split(" ")[2];
+            jsonWorkloads.jsonWriter("Second_Salary" , secondSalary , "./vars.json");
+            message.setText("Second salary initialized");
+
+        } else
+            message.setText("Salary initialization failed");
     }
 }
 

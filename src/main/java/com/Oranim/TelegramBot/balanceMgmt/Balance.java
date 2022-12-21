@@ -1,78 +1,46 @@
 package com.Oranim.TelegramBot.balanceMgmt;
 
-import com.Oranim.TelegramBot.Exception.IllegalSalaryException;
 import com.Oranim.TelegramBot.db.DatabaseListAction;
 import com.Oranim.TelegramBot.utils.BotLogging;
+import com.Oranim.TelegramBot.utils.JsonWorkloads;
+
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
-//TODO need to fix this class broke it with salary env env
 public class Balance {
 
     private double balance;
-    private static double firstSalary;
-    private static double secondSalary;
+    private final double firstSalary = getSalary("First_Salary");
+    private final double secondSalary = getSalary("Second_Salary");
     private final double salary = firstSalary + secondSalary;
 
-    DatabaseListAction databaseListAction = new DatabaseListAction();
-
     public Double getBalance() throws SQLException {
-        balance = salary - Double.parseDouble(databaseListAction.getTotalMonthSpending());
+        BotLogging.setInfoLog(classLog("getBalance","this method can throw sql exception"));
+        balance = salary - Double.parseDouble(new DatabaseListAction().getTotalMonthSpending());
         return balance;
     }
 
     public void addToBalance(String amountToAdd) {
         balance += Double.parseDouble(amountToAdd);
-
     }
 
     public String getStringBalance() throws SQLException {
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
-        return decimalFormat.format(getBalance());
+        BotLogging.setInfoLog(classLog("getStringBalance","this method can throw sql exception"));
+        //DecimalFormat.format limit the number of numbers after the dot
+        return new DecimalFormat("0.00").format(getBalance());
     }
 
-    public void setFirstSalary(double firstSalary) throws IllegalSalaryException {
-        if (System.getenv("FIRST_SALARY").isEmpty()) {
-            boolean salaryLessThanZero = firstSalary < 0;
-
-            if (salaryLessThanZero) {
-                BotLogging.setInfoLog(classLog("Blance", "setFirstSalary"));
-                throw new IllegalSalaryException("Salary cant be under 0");
-            }
-
-            Balance.firstSalary = firstSalary;
-            return;
-
-        }
-        BotLogging.setInfoLog(classLog("Blance", "setFirstSalary", "First salary initialized via env"));
-        Balance.firstSalary = Double.parseDouble(System.getenv("FIRST_SALARY"));
+    private double getSalary(String salary) {
+        JsonWorkloads jsonWorkloads = new JsonWorkloads();
+        String salaryToReturn = jsonWorkloads.jsonReader("./vars.json").get(salary).toString();
+        return Double.parseDouble(salaryToReturn);
 
     }
 
 
-    public void setSecondSalary(double secondSalary) throws IllegalSalaryException {
-
-        if (System.getenv("SECOND_SALARY").isEmpty()) {
-            boolean salaryLessThanZero = firstSalary < 0;
-
-            if (salaryLessThanZero) {
-                BotLogging.setInfoLog(classLog("Blance", "setSeconderySalary"));
-                throw new IllegalSalaryException("Salary cant be under 0");
-            }
-
-            Balance.secondSalary = secondSalary;
-            return;
-        }
-        BotLogging.setInfoLog(classLog("Blance", "setSecondSalary", "Second salary initialized via env"));
-        Balance.secondSalary = Double.parseDouble(System.getenv("SECOND_SALARY"));
-
-    }
-
-    private String classLog(String className, String method) {
-        return "Exception accure in class: %s , method: %s ".formatted(className, method);
-    }
-
-    private String classLog(String className, String method, String description) {
-        return "Exception accure in class: %s , method: %s Description: %s".formatted(className, method, description);
+    private String classLog(String method, String description) {
+        return "Exception occur in class: %s , method: %s Description: %s".formatted(Balance.class.getName(), method, description);
     }
 }
