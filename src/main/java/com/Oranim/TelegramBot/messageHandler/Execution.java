@@ -29,7 +29,10 @@ public class Execution {
     @SuppressWarnings("rawtypes")
     public BotApiMethod messageDispatcher(String command, SendMessage message, Update update) {
         try {
-
+            //todo need to finish implementation on branch load excel excel changed to csv
+            if (update.getMessage().getDocument() != null){
+                System.out.println("doc");
+            }
 
             if (keyboardButtonsCommendsList.contains(command.toLowerCase())) {
                 return messageDispatcher.keyboardButtonsHandler(message, command, inLine, approvedCompaniesList, update);
