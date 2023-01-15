@@ -7,6 +7,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import java.sql.SQLException;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,29 +63,48 @@ public class InlineKeyboard {
         return KeyboardBuilders.createNewKeyboardFromRows(KeyboardBuilders.createNewKeyboardRows(firstRow,secondRow,thirdRow));
     }
 
-    //todo this function works only for 2022 need to add anover layer for years
+
     //showing the months in this year and make inline keyboard for each month
-    public InlineKeyboardMarkup showMonthsIn2022KeyboardMarkup(){
+    public InlineKeyboardMarkup showMonthsInKeyboardMarkup(){
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<InlineKeyboardButton> buttons = new ArrayList<>();
 
-        int year = 2022;
+        List<Integer> years = generateYearsForInlineMarkup(2022);
 
-        for (int i = 1; i <= 12; i++){
-            InlineKeyboardButton monthButton = new InlineKeyboardButton(i + "/" + year);
-            monthButton.setCallbackData("monthDbCheck"+Const.INLINE_SEPARATOR+i);
-            buttons.add(monthButton);
-            if (i % 4 == 0){
-                rowList.add(buttons);
-                buttons = new ArrayList<>();
+        years.forEach(year -> {
+
+            List<InlineKeyboardButton> buttons = new ArrayList<>();
+            for (int i = 1; i <= 12; i++){
+                InlineKeyboardButton monthButton = new InlineKeyboardButton(i + "/" + year);
+                monthButton.setCallbackData("monthDbCheck" + Const.INLINE_SEPARATOR + i);
+                buttons.add(monthButton);
+                if (i % 4 == 0){
+                    rowList.add(buttons);
+                    buttons = new ArrayList<>();
+                }
             }
-        }
-        rowList.add(buttons);
-        monthsMarkup.setKeyboard(rowList);
+            rowList.add(buttons);
+            monthsMarkup.setKeyboard(rowList);
+
+        });
+
 
         return monthsMarkup;
     }
+
+
+
+    private List<Integer> generateYearsForInlineMarkup(int startYear){
+        int currentYear = Year.now().getValue();
+        List<Integer> years = new ArrayList<>();
+
+        for (int i = startYear; i <= currentYear; i++){
+            years.add(i);
+        }
+
+        return years;
+    }
+
     //made  for future use suppose to show transaction from older months
     public void showOlderMonthCategory(SendMessage message){
         List<InlineKeyboardButton> firstRow = new ArrayList<>();

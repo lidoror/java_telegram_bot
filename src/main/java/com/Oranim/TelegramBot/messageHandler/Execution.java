@@ -6,6 +6,7 @@ import com.Oranim.TelegramBot.db.MariaDB;
 import com.Oranim.TelegramBot.keyboards.InlineKeyboard;
 import com.Oranim.TelegramBot.utils.FunctionsUtils;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import java.sql.SQLException;
@@ -32,6 +33,7 @@ public class Execution {
             //todo need to finish implementation on branch load excel excel changed to csv
             if (update.getMessage().getDocument() != null){
                 System.out.println("doc");
+                GetFile fileRequest = new GetFile();
             }
 
             if (keyboardButtonsCommendsList.contains(command.toLowerCase())) {

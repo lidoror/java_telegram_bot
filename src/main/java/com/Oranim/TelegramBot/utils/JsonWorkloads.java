@@ -13,6 +13,10 @@ import java.util.Arrays;
 
 public class JsonWorkloads {
 
+    public JsonWorkloads(){
+
+    }
+
     /**
      * this method write json file to the file system
      * @param key the key for the json
