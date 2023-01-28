@@ -3,7 +3,7 @@ package com.oranim.telegrambot.utils;
 import com.oranim.telegrambot.Exception.IllegalSalaryException;
 import com.oranim.telegrambot.Exception.NoConnectionToDbException;
 import com.oranim.telegrambot.balanceMgmt.Balance;
-import com.oranim.telegrambot.db.DatabaseListAction;
+import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.db.ShoppingMgmtRecord;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
@@ -72,55 +72,37 @@ public class FunctionsUtils {
     }
 
 
-    public static boolean checkIfGivenMonthEqualToCurrentMonth(String givenDate) {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate monthToCheck = LocalDate.parse(givenDate);
-        return currentDate.getMonth().equals(monthToCheck.getMonth());
-    }
 
 
-    public static void monthlyCategoryButtonsDispatcher1(String command, SendMessage message, DatabaseListAction databaseListAction) throws SQLException {
-        String category = command.split("-")[1];
-        String identifier = command.split("-")[0];
-        String textFormat = category + ":\n";
 
-        if (command.equals("monthlyCategory-All")) {
-            message.setText("All Expenses: \n" + databaseListAction.getMonthlyExpenses());
-        } else if (identifier.contains("monthlyCategory")) {
-            message.setText(textFormat + databaseListAction.getMonthlyCategoryRecord(categoryMapper(category)));
-        }
-        if (command.equals("monthlySum-All")) {
-            message.setText("All Spending:\n" + databaseListAction.getTotalMonthSpending());
-        } else if (identifier.equals("monthlySum")) {
-            message.setText(textFormat + databaseListAction.getCategoryMonthlySpent(categoryMapper(category)));
-        }
-    }
-
-    public static EditMessageText monthlyCategoryButtonsDispatcher(String command, Update update, DatabaseListAction databaseListAction) throws SQLException {
+    public static EditMessageText monthlyCategoryButtonsDispatcher(String command, Update update, DatabaseAction databaseAction) throws SQLException {
         InlineKeyboard inlineKeyboard = new InlineKeyboard();
         String category = command.split("-")[1];
         String identifier = command.split("-")[0];
         String textFormat = category + ":\n";
+
+
         EditMessageText editedKeyboard = null;
 
 
         if (identifier.contains("monthlyCategory")) {
             editedKeyboard =
                     KeyboardBuilders.createEditMessageInline(textFormat,
-                            inlineKeyboard.listToTransactionInline(databaseListAction
+                            inlineKeyboard.listToTransactionInline(databaseAction
                                     .getMonthlyCategoryRecord(categoryMapper(category))), update);
         }
         if (command.equals("monthlyCategory-All")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageInline("All Expenses:\n", inlineKeyboard.listToTransactionInline(databaseListAction.getMonthlyExpensesAsList()), update);
+                    KeyboardBuilders.createEditMessageInline("All Expenses:\n", inlineKeyboard.listToTransactionInline(databaseAction.getExpensesByDates(getCurrentMonth() , getCurrentYear())), update);
         }
 
         if (command.equals("monthlySum-All")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageText("All Spending:\n" + databaseListAction.getTotalMonthSpending(), update);
+                    KeyboardBuilders.createEditMessageText("All Spending:\n" + databaseAction.getTotalMoneySpentCurrentMonth(getCurrentMonth(),getCurrentYear()), update);
+
         } else if (identifier.equals("monthlySum")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageText(textFormat + databaseListAction.getCategoryMonthlySpent(categoryMapper(category)), update);
+                    KeyboardBuilders.createEditMessageText(textFormat + databaseAction.getCategoryMonthlySpent(categoryMapper(category)), update);
         }
         return editedKeyboard;
     }
@@ -155,9 +137,6 @@ public class FunctionsUtils {
             message.setText("A problem occurred in data insertion");
     }
 
-    public static String listOutputFormatter(List<ShoppingMgmtRecord> listToFormat) {
-        return String.valueOf(listToFormat).replace("[", "").replace(", ", "").replace("]", "");
-    }
 
 
     public static List<String> getKeyboardButtonsCommands() {
@@ -208,7 +187,7 @@ public class FunctionsUtils {
                 "GET_YEAR");
     }
 
-    public static void salaryInitializationFromInput(SendMessage message, String command) throws IllegalSalaryException {
+    public static void salaryInitializationFromInput(SendMessage message, String command)  {
         JsonWorkloads jsonWorkloads = new JsonWorkloads();
         if (command.contains("one")) {
             String firstSalary = command.split(" ")[2];
@@ -222,6 +201,18 @@ public class FunctionsUtils {
 
         } else
             message.setText("Salary initialization failed");
+    }
+
+    public static String getCurrentMonth() {
+        String addZeroToMonthIfValueLessThan10 = "0"+LocalDate.now().getMonthValue();
+        String currentMonth = LocalDate.now().getMonthValue() < 10 ?  addZeroToMonthIfValueLessThan10 : String.valueOf(LocalDate.now().getMonthValue());
+
+        return currentMonth;
+    }
+
+    public static String getCurrentYear(){
+        String currentYear = String.valueOf(LocalDate.now().getYear());
+        return currentYear;
     }
 }
 
