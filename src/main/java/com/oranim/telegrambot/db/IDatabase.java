@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 public interface IDatabase {
-    void updateDB(String product, String price, String company, String note);
+    void insertDataToDB(String product, String price, String company, String note);
 
     List<ShoppingMgmtRecord> dbRecordToList() throws SQLException;
 
     void setDbParameter(String command);
 
     boolean checkConnection() throws SQLException;
+
+    List<ShoppingMgmtRecord> getItemsFromDbBetweenDates(String startDate, String endDate) ;
 
     Map<Integer,ShoppingMgmtRecord> dbListToMap()throws SQLException;
 }
