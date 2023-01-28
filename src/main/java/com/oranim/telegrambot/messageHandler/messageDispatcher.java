@@ -1,8 +1,7 @@
 package com.oranim.telegrambot.messageHandler;
 
 import com.oranim.telegrambot.Exception.IllegalSalaryException;
-import com.oranim.telegrambot.db.DatabaseListAction;
-import com.oranim.telegrambot.db.DatabaseMapAction;
+import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
 import com.oranim.telegrambot.keyboards.KeyboardBuilders;
@@ -13,7 +12,6 @@ import com.oranim.telegrambot.keyboards.CustomKeyboard;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -65,9 +63,9 @@ public class messageDispatcher {
         }
 
         if (command.contains("GetTransactionInPlace" + Const.SEPARATOR)) {
-            DatabaseMapAction databaseMapAction = new DatabaseMapAction();
+            DatabaseAction databaseAction = new DatabaseAction();
             int transactionNumber = Integer.parseInt(command.split(Const.SEPARATOR)[1]);
-            message.setText(databaseMapAction.dbRecordsToMap(transactionNumber));
+            message.setText(databaseAction.dbRecordsToMap(transactionNumber));
         }
 
 
@@ -80,48 +78,49 @@ public class messageDispatcher {
     }
 
 
-    public EditMessageText editedMessageReply(Update update, SendMessage message, String command, DatabaseListAction databaseListAction, IDatabase database) throws SQLException {
-        EditMessageText messageText = null;
+    public EditMessageText editedMessageReply(Update update, SendMessage message, String command, DatabaseAction databaseAction, IDatabase database) throws SQLException {
+        EditMessageText editedMessage = null;
 
         //TODO complete this
         if (command.contains("GET_YEAR"+ Const.SEPARATOR)){
             int year = Integer.parseInt(command.split(Const.SEPARATOR)[1]);
-            messageText = KeyboardBuilders.createEditMessageInline("Expenses for year " + year,
+            editedMessage = KeyboardBuilders.createEditMessageInline("Expenses for year " + year,
                     new InlineKeyboard().generateMonthsInKeyboardMarkup(year) , update);
         }
 
 
         if (command.contains("monthlyCategory-") || command.contains("monthlySum-")) {
-            messageText = FunctionsUtils.monthlyCategoryButtonsDispatcher(command, update, databaseListAction);
+            editedMessage = FunctionsUtils.monthlyCategoryButtonsDispatcher(command, update, databaseAction);
         }
 
 
         if (command.contains("SendChatId.admin" + Const.SEPARATOR)) {
             String chatID = command.split(Const.SEPARATOR)[1];
-            messageText = KeyboardBuilders.createEditMessageText(chatID, update);
+            editedMessage = KeyboardBuilders.createEditMessageText(chatID, update);
         }
 
         if (command.equals("checkDBS.admin")) {
             String dbStatus = FunctionsUtils.dbStatusCheckInline(database);
-            messageText = KeyboardBuilders.createEditMessageText(dbStatus, update);
+            editedMessage = KeyboardBuilders.createEditMessageText(dbStatus, update);
         }
 
-        //todo works only for month need to add year
+
         if (command.contains("monthDbCheck" + Const.SEPARATOR)) {
             InlineKeyboard inlineKeyboard = new InlineKeyboard();
             String month = command.split(Const.SEPARATOR)[1];
             String year = command.split(Const.SEPARATOR)[2];
 
-            if (databaseListAction.getMonthByExpense(month).isEmpty()) {
-                messageText = KeyboardBuilders.createEditMessageText("No Expenses in " + FunctionsUtils.formatNumberMonthsToNames(month) + ".", update);
+            if (databaseAction.getExpensesByDates(month,year).isEmpty()) {
+                String messageText = "No Expenses in " + FunctionsUtils.formatNumberMonthsToNames(month) +" " + year +".";
+                editedMessage = KeyboardBuilders.createEditMessageText(messageText, update);
             }else {
-                messageText = KeyboardBuilders.createEditMessageInline( FunctionsUtils.formatNumberMonthsToNames(month) + " Expenses:\n",
-                        inlineKeyboard.listToTransactionInline(databaseListAction.getMonthByExpense(month)), update);
+                editedMessage = KeyboardBuilders.createEditMessageInline( FunctionsUtils.formatNumberMonthsToNames(month) + " Expenses:\n",
+                        inlineKeyboard.listToTransactionInline(databaseAction.getExpensesByDates(month ,year)), update);
             }
         }
 
 
-        return messageText;
+        return editedMessage;
     }
 }
 

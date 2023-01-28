@@ -1,6 +1,6 @@
 package com.oranim.telegrambot.messageHandler;
 
-import com.oranim.telegrambot.db.DatabaseListAction;
+import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.db.MariaDB;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
@@ -25,7 +25,7 @@ public class Execution {
     InlineKeyboard inLine = new InlineKeyboard();
     messageDispatcher messageDispatcher = new messageDispatcher();
     IDatabase database = new MariaDB();
-    DatabaseListAction databaseListAction = new DatabaseListAction();
+    DatabaseAction databaseAction = new DatabaseAction();
 
     public Execution() {
     }
@@ -44,7 +44,7 @@ public class Execution {
                 return messageDispatcher.keyboardButtonsHandler(message, command, inLine, approvedCompaniesList, update);
 
             } else if (listContainArg(command)) {
-                return messageDispatcher.editedMessageReply(update, message, command, databaseListAction, database);
+                return messageDispatcher.editedMessageReply(update, message, command, databaseAction, database);
             }
 
             messageDispatcher.inLineCallBackHandler(message, command, approvedCompaniesList, database);

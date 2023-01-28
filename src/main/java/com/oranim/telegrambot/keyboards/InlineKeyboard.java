@@ -1,6 +1,5 @@
 package com.oranim.telegrambot.keyboards;
 
-import com.oranim.telegrambot.db.DatabaseListAction;
 import com.oranim.telegrambot.db.ShoppingMgmtRecord;
 import com.oranim.telegrambot.utils.Const;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class InlineKeyboard {
 
@@ -121,42 +120,7 @@ public class InlineKeyboard {
     }
 
 
-    //made  for future use suppose to show transaction from older months
-    public void showOlderMonthCategory(SendMessage message) {
-        List<InlineKeyboardButton> firstRow = new ArrayList<>();
-        List<InlineKeyboardButton> secondRow = new ArrayList<>();
-        List<InlineKeyboardButton> thirdRow = new ArrayList<>();
-        firstRow.add(KeyboardBuilders.createNewKeyboardButton("Fuel", "OlderMonth-Fuel"));
-        firstRow.add(KeyboardBuilders.createNewKeyboardButton("House", "OlderMonth-House Shopping"));
-        secondRow.add(KeyboardBuilders.createNewKeyboardButton("Shopping", "OlderMonth-Shopping"));
-        secondRow.add(KeyboardBuilders.createNewKeyboardButton("Food", "OlderMonth-Food"));
-        thirdRow.add(KeyboardBuilders.createNewKeyboardButton("General", "OlderMonth-General"));
-        thirdRow.add(KeyboardBuilders.createNewKeyboardButton("All", "OlderMonth-All"));
-        message.setReplyMarkup(KeyboardBuilders.createNewKeyboardFromRows(KeyboardBuilders.createNewKeyboardRows(firstRow, secondRow, thirdRow)));
-    }
 
-    //template for turning transaction into inline keyboard fields
-    private void showTransactionAsInline(SendMessage message, DatabaseListAction databaseListAction) throws SQLException {
-        InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        List<InlineKeyboardButton> buttons = new ArrayList<>();
-
-
-        for (int i = 0; i < databaseListAction.getCurrentMonthProducts().size(); i++) {
-
-            String buttonTextFormat = databaseListAction.getCurrentMonthProducts().get(i) + " " + databaseListAction.getCurrentMonthPrices().get(i);
-
-            if (i % 3 == 0 && i != 0) {
-                rowList.add(buttons);
-                buttons = new ArrayList<>();
-            }
-            buttons.add(KeyboardBuilders.createNewKeyboardButton(buttonTextFormat, "GetTransactionInPlace-"));
-
-        }
-        rowList.add(buttons);
-        monthsMarkup.setKeyboard(rowList);
-        message.setReplyMarkup(monthsMarkup);
-    }
 
     /**
      * @param list of shopping products
@@ -168,9 +132,9 @@ public class InlineKeyboard {
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         List<InlineKeyboardButton> buttons = new ArrayList<>();
 
-        List<String> products = list.stream().map(ShoppingMgmtRecord::product).collect(Collectors.toList());
-        List<String> prices = list.stream().map(ShoppingMgmtRecord::price).collect(Collectors.toList());
-        List<Integer> productID = list.stream().map(ShoppingMgmtRecord::columID).collect(Collectors.toList());
+        List<String> products = list.stream().map(ShoppingMgmtRecord::product).toList();
+        List<String> prices = list.stream().map(ShoppingMgmtRecord::price).toList();
+        List<Integer> columID = list.stream().map(ShoppingMgmtRecord::columID).toList();
 
 
         for (int i = 0; i < list.size(); i++) {
@@ -181,7 +145,7 @@ public class InlineKeyboard {
                 rowList.add(buttons);
                 buttons = new ArrayList<>();
             }
-            buttons.add(KeyboardBuilders.createNewKeyboardButton(buttonTextFormat, "GetTransactionInPlace" + Const.SEPARATOR + productID.get(i)));
+            buttons.add(KeyboardBuilders.createNewKeyboardButton(buttonTextFormat, "GetTransactionInPlace" + Const.SEPARATOR + columID.get(i)));
 
         }
         rowList.add(buttons);
