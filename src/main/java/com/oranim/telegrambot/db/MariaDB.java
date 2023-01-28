@@ -3,18 +3,14 @@ package com.oranim.telegrambot.db;
 import com.oranim.telegrambot.utils.BotLogging;
 import com.oranim.telegrambot.utils.FunctionsUtils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
 
 public class MariaDB implements IDatabase {
 
     private final String rootConnection = System.getenv("MARIADB_URL");
-    private final String selectAllShopping = "Select * From shopping";
+
 
 
     public MariaDB(){}
@@ -39,67 +35,71 @@ public class MariaDB implements IDatabase {
      * this method gets 4 arguments from the user and add 2 generated arguments update them in the database , this is the wat we update data in the DB
      * @param product the product the user send
      * @param price the price the user send
-     * @param company the company the user send
+     * @param company the category the user send
      * @param note the note the user send
      */
     @Override
-    public void updateDB(String product, String price, String company, String note) {
+    public void insertDataToDB(String product, String price, String company, String note) {
 
         try(Connection conn = getDbConnection()) {
-            String insertIntoShopping = "INSERT INTO shopping (product,price,company,note,purchase_date,index_value) VALUES (?,?,?,?,?,?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(insertIntoShopping);
-            preparedStatement.setString(1,product);
-            preparedStatement.setString(2,price);
-            preparedStatement.setString(3,company);
-            preparedStatement.setString(4, note);
-            preparedStatement.setString(5, String.valueOf(LocalDate.now()));
-            preparedStatement.setInt(6, setNewIndexValue());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+            CallableStatement callableStatement = conn.prepareCall("{ call insertDataToShopping(?,?,?,?,?) }");
+            callableStatement.setString(1, product);
+            callableStatement.setString(2, price);
+            callableStatement.setString(3, company);
+            callableStatement.setString(4, note);
+            callableStatement.setString(5, String.valueOf(LocalDate.now()));
+            callableStatement.executeUpdate();
+            callableStatement.close();
+
         } catch (SQLException sqlException) {
             BotLogging.setCriticalLog(classLog("updateDB", Arrays.toString(sqlException.getStackTrace())));
 
         }
     }
 
-    /**
-     * this methon search thow the db and generate new index value in DB
-     * @return new insex value for the inserted data
-     * @throws SQLException
-     */
-    private int setNewIndexValue() throws SQLException{
-        List<Integer> columID = dbRecordToList().stream().map(ShoppingMgmtRecord::columID).toList();
-        return columID.get(columID.size() - 1)+1;
+    private List<ShoppingMgmtRecord> returnRecordsAsShoppingMGMT(List<ShoppingMgmtRecord> records, ResultSet resultSet) throws SQLException {
+
+        String product = resultSet.getString(1);
+        String price = resultSet.getString(2);
+        String company = resultSet.getString(3);
+        String note = resultSet.getString(4);
+        String purchaseDate = resultSet.getString(5);
+        int index_value = resultSet.getInt(6);
+
+        records.add(
+                new ShoppingMgmtRecord(
+                        product,price,company,note,purchaseDate,index_value
+                )
+        );
+        return records;
     }
 
-    /**
-     * this method pull all the data in the db and load to shooping menegemnt class
-     * @param records list the data generated into
-     * @param conn the connection we use to acces the data
-     * @throws SQLException
-     */
-    private void getDbDataToShoppingMgmt(List<ShoppingMgmtRecord> records, Connection conn) throws SQLException {
-        PreparedStatement preparedStatement = conn.prepareStatement(selectAllShopping);
-        ResultSet resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()){
-            String product = resultSet.getString(1);
-            String price = resultSet.getString(2);
-            String company = resultSet.getString(3);
-            String note = resultSet.getString(4);
-            String purchaseDate = resultSet.getString(5);
-            int columID = resultSet.getInt(6);
 
-            ShoppingMgmtRecord shoppingMgmtRecord =
-                    new ShoppingMgmtRecord(product,price,company,note,purchaseDate,columID);
-            records.add(shoppingMgmtRecord);
+    public List<ShoppingMgmtRecord> getItemsFromDbBetweenDates(String startDate, String endDate){
+        List<ShoppingMgmtRecord> records = new ArrayList<>();
+        try(Connection conn = getDbConnection()){
+            CallableStatement callableStatement = conn.prepareCall("{ call getRecordsByDate(? ,?) }");
+            callableStatement.setString(1,startDate);
+            callableStatement.setString(2,endDate);
+            ResultSet resultSet = callableStatement.executeQuery();
+
+            while (resultSet.next()){
+                records = returnRecordsAsShoppingMGMT(records, resultSet);
+            }
+            resultSet.close();
+            callableStatement.close();
+
+        }catch (SQLException sqlException){
+
         }
-        resultSet.close();
-        preparedStatement.close();
+        return records;
     }
 
+
+
     /**
-     * transfer the loaded data to a list
+     * create call that returns all data in database
      * @return list of the loaded data from the DB
      * @throws SQLException
      */
@@ -107,7 +107,14 @@ public class MariaDB implements IDatabase {
     public List<ShoppingMgmtRecord> dbRecordToList() throws SQLException {
         List<ShoppingMgmtRecord> records = new ArrayList<>();
         try(Connection conn = getDbConnection()){
-            getDbDataToShoppingMgmt(records, conn);
+            CallableStatement callableStatement = conn.prepareCall("{ call getAllDbRecords() }");
+            ResultSet resultSet = callableStatement.executeQuery();
+
+            while (resultSet.next()) {
+                returnRecordsAsShoppingMGMT(records, resultSet);
+            }
+
+
 
         }catch (SQLException sqlException){
             BotLogging.setCriticalLog(classLog("dbRecordToList", Arrays.toString(sqlException.getStackTrace())));
@@ -122,7 +129,7 @@ public class MariaDB implements IDatabase {
      */
     @Override
     public void setDbParameter(String command) {
-        updateDB(FunctionsUtils.generateProductFromInput(command),
+        insertDataToDB(FunctionsUtils.generateProductFromInput(command),
                 FunctionsUtils.generateProductCostFromInput(command), FunctionsUtils.generateProductCompanyFromInput(command),
                 String.valueOf(FunctionsUtils.generateProductNoteFromInput(command)));
     }
