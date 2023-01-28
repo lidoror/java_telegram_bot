@@ -1,7 +1,7 @@
 package com.oranim.telegrambot.db;
 
 
-public record ShoppingMgmtRecord(String product, String price, String company,
+public record ShoppingMgmtRecord(String product, String price, String category,
                                  String note, String purchaseDate, int columID) {
 
 
@@ -11,9 +11,8 @@ public record ShoppingMgmtRecord(String product, String price, String company,
         return
                 "product: " + product +
                         "\nPrice: " + price +
-                        "\nCompany: " + company+
+                        "\nCategory: " + category +
                         "\nNote: " + note+
-                        "\nPurchase Date: " + purchaseDate
-                        +"\n--------\n";
+                        "\nPurchase Date: " + purchaseDate;
     }
 }
