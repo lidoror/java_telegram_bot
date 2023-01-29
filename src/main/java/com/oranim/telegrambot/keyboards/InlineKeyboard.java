@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.sql.SQLException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +15,14 @@ public class InlineKeyboard {
 
     public InlineKeyboard() {
     }
-    //TODO fix this
-    //showing the months in this year and make inline keyboard for each month
+
+    private final int startYear = Integer.parseInt(System.getenv("START_YEAR"));
+
+    /**
+     * generate 12 inline keys for the months of the year we pass in
+     * @param year we want to generate the key for
+     * @return InlineKeyboardMarkup which is the 12 keys
+     */
     public InlineKeyboardMarkup generateMonthsInKeyboardMarkup(int year) {
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
@@ -43,12 +48,16 @@ public class InlineKeyboard {
         return monthsMarkup;
     }
 
+    /**
+     * this function generates the keys for the years buttons
+     * @return InlineKeyboardMarkup of the years buttons
+     */
     public InlineKeyboardMarkup generateYearsKeyboardMarkup() {
         InlineKeyboardMarkup yearsMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         List<InlineKeyboardButton> buttons = new ArrayList<>();
 
-        generateYearsForInlineMarkup(2022).forEach(year -> {
+        generateYearsForInlineMarkup(startYear).forEach(year -> {
             String callbackData = "GET_YEAR" + Const.SEPARATOR + year;
             buttons.add(KeyboardBuilders.createNewKeyboardButton(year.toString(), callbackData));
         });
@@ -58,7 +67,11 @@ public class InlineKeyboard {
         return yearsMarkup;
     }
 
-
+    /**
+     * this function generates the years from a specific year till today
+     * @param startYear is the year we want to start generating the years
+     * @return a list of integers representing the years
+     */
     private List<Integer> generateYearsForInlineMarkup(int startYear) {
         int currentYear = Year.now().getValue();
         List<Integer> years = new ArrayList<>();
@@ -72,7 +85,6 @@ public class InlineKeyboard {
 
     /**
      * this method generate keyboard with admin keys only like check db connection
-     *
      * @param message is the message from the user
      * @return inline that contain only admin keys
      */
@@ -85,7 +97,6 @@ public class InlineKeyboard {
 
     /**
      * this keyboard is the shopping categories
-     *
      * @return inline keyboard with the categories we have
      */
     public InlineKeyboardMarkup monthlyExpensesInlineButtonMarkup() {
@@ -103,7 +114,6 @@ public class InlineKeyboard {
 
     /**
      * this keyboard incharge of showing the sum of money spent on each category
-     *
      * @return inline keyboard with the sum of each category
      */
     public InlineKeyboardMarkup monthlySumKeyboardMarkup() {
@@ -125,9 +135,8 @@ public class InlineKeyboard {
     /**
      * @param list of shopping products
      * @return the list as inline keyboard
-     * @throws SQLException
      */
-    public InlineKeyboardMarkup listToTransactionInline(List<ShoppingMgmtRecord> list) throws SQLException {
+    public InlineKeyboardMarkup listToTransactionInline(List<ShoppingMgmtRecord> list) {
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         List<InlineKeyboardButton> buttons = new ArrayList<>();
