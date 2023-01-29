@@ -7,7 +7,7 @@ import java.util.Map;
 public interface IDatabase {
     void insertDataToDB(String product, String price, String company, String note);
 
-    List<ShoppingMgmtRecord> dbRecordToList() throws SQLException;
+    List<ShoppingMgmtRecord> getAllRecordsFromDb() throws SQLException;
 
     void setDbParameter(String command);
 
