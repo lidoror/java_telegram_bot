@@ -1,11 +1,9 @@
 package com.oranim.telegrambot.utils;
 
-import com.oranim.telegrambot.Exception.IllegalSalaryException;
 import com.oranim.telegrambot.Exception.NoConnectionToDbException;
 import com.oranim.telegrambot.balanceMgmt.Balance;
 import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
-import com.oranim.telegrambot.db.ShoppingMgmtRecord;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
 import com.oranim.telegrambot.keyboards.KeyboardBuilders;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -39,7 +37,7 @@ public class FunctionsUtils {
     }
 
     public static boolean stringContainNumber(String str) {
-        return NumberUtils.isNumber(str);
+        return NumberUtils.isDigits(str);
     }
 
 
@@ -125,9 +123,9 @@ public class FunctionsUtils {
 
     public static void inputInsertionAndValidation(String command, SendMessage message, IDatabase database) throws SQLException {
         Balance balance = new Balance();
-        int sizeBeforeDataInsertion = database.dbRecordToList().size();
+        int sizeBeforeDataInsertion = database.getAllRecordsFromDb().size();
         database.setDbParameter(command);
-        int sizeAfterDataInsertion = database.dbRecordToList().size();
+        int sizeAfterDataInsertion = database.getAllRecordsFromDb().size();
         boolean dbRecordUpdated = sizeAfterDataInsertion == sizeBeforeDataInsertion + 1;
 
         if (dbRecordUpdated) {
