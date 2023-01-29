@@ -16,7 +16,7 @@ public class MariaDB implements IDatabase {
     public MariaDB(){}
 
     /**
-     * This method establish connection with the mariadb databaes
+     * This method establish connection with the mariadb databases
      * @return the object of the connection
      */
     private Connection getDbConnection(){
@@ -57,6 +57,13 @@ public class MariaDB implements IDatabase {
         }
     }
 
+    /**
+     * takes list of shopping mgmt and adds the records from the db to it
+     * @param records is the list we want to add the records from the db
+     * @param resultSet is the value we got from the db after the request
+     * @return list of shopping mgmt records
+     * @throws SQLException if the function wasn't able to get the date from the resultSet
+     */
     private List<ShoppingMgmtRecord> returnRecordsAsShoppingMGMT(List<ShoppingMgmtRecord> records, ResultSet resultSet) throws SQLException {
 
         String product = resultSet.getString(1);
@@ -75,7 +82,12 @@ public class MariaDB implements IDatabase {
     }
 
 
-
+    /**
+     * this function gets two dates and makes a call to the database to get the records between them
+     * @param startDate is the date we wat to start the filter
+     * @param endDate is the date we wat to end the filter
+     * @return list of records between startDate and endDate
+     */
     public List<ShoppingMgmtRecord> getItemsFromDbBetweenDates(String startDate, String endDate){
         List<ShoppingMgmtRecord> records = new ArrayList<>();
         try(Connection conn = getDbConnection()){
@@ -85,13 +97,13 @@ public class MariaDB implements IDatabase {
             ResultSet resultSet = callableStatement.executeQuery();
 
             while (resultSet.next()){
-                records = returnRecordsAsShoppingMGMT(records, resultSet);
+                returnRecordsAsShoppingMGMT(records, resultSet);
             }
             resultSet.close();
             callableStatement.close();
 
         }catch (SQLException sqlException){
-
+            BotLogging.setInfoLog(classLog("tried to get records in getItemsFromDbBetweenDates but failed", Arrays.toString(sqlException.getStackTrace())));
         }
         return records;
     }
@@ -101,10 +113,10 @@ public class MariaDB implements IDatabase {
     /**
      * create call that returns all data in database
      * @return list of the loaded data from the DB
-     * @throws SQLException
+     * @throws SQLException if we encountered a problem accessing the database
      */
     @Override
-    public List<ShoppingMgmtRecord> dbRecordToList() throws SQLException {
+    public List<ShoppingMgmtRecord> getAllRecordsFromDb() throws SQLException {
         List<ShoppingMgmtRecord> records = new ArrayList<>();
         try(Connection conn = getDbConnection()){
             CallableStatement callableStatement = conn.prepareCall("{ call getAllDbRecords() }");
@@ -137,7 +149,7 @@ public class MariaDB implements IDatabase {
     /**
      * check the connection to the DB
      * @return if the connection is valid or not
-     * @throws SQLException
+     * @throws SQLException if we fail to connect
      */
     @Override
     public boolean checkConnection() throws SQLException{
@@ -152,18 +164,18 @@ public class MariaDB implements IDatabase {
     /**
      * load the data generated to the list into a map
      * @return map of data generated from db
-     * @throws SQLException
+     * @throws SQLException if we fail to get the data from the database
      */
     public Map<Integer,ShoppingMgmtRecord> dbListToMap()throws SQLException{
         Map<Integer,ShoppingMgmtRecord> dbRecordMap = new HashMap<>();
-        for (var record : dbRecordToList()) {
+        for (var record : getAllRecordsFromDb()) {
             dbRecordMap.put(record.columID(),record);
         }
         return dbRecordMap;
     }
 
     private String classLog(String method ,String stackTrace){
-        return "An exception accured in class %s mehtod %s \nStack Tracce:\n %s".formatted(method,MariaDB.class.getName() , stackTrace);
+        return "An exception occurred in class %s method %s \nStack Trace:\n %s".formatted(method,MariaDB.class.getName() , stackTrace);
     }
 
 
