@@ -1,6 +1,7 @@
 package com.oranim.telegrambot.messageHandler;
 
 import com.oranim.telegrambot.utils.BotLogging;
+import com.oranim.telegrambot.utils.FunctionsUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,7 +13,7 @@ import java.util.List;
 public class Bot extends TelegramLongPollingBot {
     private final String botName = System.getenv("BOT_NAME");
     private final String botToken = System.getenv("BOT_TOKEN");
-    private final List<String> approvedChats = List.of(System.getenv("APPROVED_CHATS").split(","));
+    private final List<String> approvedChats = FunctionsUtils.getApprovedChats();
 
 
     public Bot() {}
@@ -32,6 +33,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         SendMessage message = new SendMessage();
         Execution execution = new Execution();
+        @SuppressWarnings("rawtypes")
         BotApiMethod messageToReturn = message;
         String command;
         boolean updateHasMessage = update.getMessage() != null;
