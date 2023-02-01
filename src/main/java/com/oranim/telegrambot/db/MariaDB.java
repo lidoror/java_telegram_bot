@@ -1,5 +1,6 @@
 package com.oranim.telegrambot.db;
 
+import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
 import com.oranim.telegrambot.utils.BotLogging;
 import com.oranim.telegrambot.utils.FunctionsUtils;
 
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class MariaDB implements IDatabase {
 
-    private final String rootConnection = System.getenv("MARIADB_URL");
+    private final String dbConnectionString = System.getenv("MARIADB_URL");
 
 
 
@@ -22,7 +23,7 @@ public class MariaDB implements IDatabase {
     private Connection getDbConnection(){
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(rootConnection);
+            connection = DriverManager.getConnection(dbConnectionString);
 
         } catch (SQLException sqlException) {
             BotLogging.setCriticalLog(classLog("getDBConnection", Arrays.toString(sqlException.getStackTrace())));
@@ -140,10 +141,18 @@ public class MariaDB implements IDatabase {
      * @param command the user from the input
      */
     @Override
-    public void setDbParameter(String command) {
-        insertDataToDB(FunctionsUtils.generateProductFromInput(command),
-                FunctionsUtils.generateProductCostFromInput(command), FunctionsUtils.generateProductCompanyFromInput(command),
-                String.valueOf(FunctionsUtils.generateProductNoteFromInput(command)));
+    public void setDbParameter(String command){
+        try {
+            insertDataToDB(
+                    FunctionsUtils.generateProductFromInput(command),
+                    FunctionsUtils.generateProductCostFromInput(command),
+                    FunctionsUtils.generateProductCompanyFromInput(command),
+                    FunctionsUtils.generateProductNoteFromInput(command)
+            );
+        }catch (UnableToGeneratePriceException exception){
+            BotLogging.setInfoLog(classLog("setDbParameter", Arrays.toString(exception.getStackTrace())));
+        }
+
     }
 
     /**
@@ -154,7 +163,7 @@ public class MariaDB implements IDatabase {
     @Override
     public boolean checkConnection() throws SQLException{
         Connection connection =
-                DriverManager.getConnection(rootConnection);
+                DriverManager.getConnection(dbConnectionString);
         boolean isValid = connection.isValid(2);
         connection.close();
         return isValid;
