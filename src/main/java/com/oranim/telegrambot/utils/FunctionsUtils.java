@@ -1,6 +1,7 @@
 package com.oranim.telegrambot.utils;
 
 import com.oranim.telegrambot.Exception.NoConnectionToDbException;
+import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
 import com.oranim.telegrambot.balanceMgmt.Balance;
 import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
@@ -14,26 +15,46 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class FunctionsUtils {
 
 
     @NotNull
     public static String generateProductCostFromInput(String price) {
-        return price.split(" ")[1];
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(price);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return "-1";
     }
 
     @NotNull
-    public static String generateProductFromInput(String product) {
-        return product.split(" ")[0];
+    public static String generateProductFromInput(String product) throws UnableToGeneratePriceException {
+        String splitter = generateProductCostFromInput(product);
+        if (splitter.equals("-1")){
+            throw new UnableToGeneratePriceException("Unable to generate product");
+        }
+        return product.split(splitter)[0];
     }
 
     @NotNull
-    public static String generateProductCompanyFromInput(String company) {
-        return company.split(" ")[2];
+    public static String generateProductCompanyFromInput(String company) throws UnableToGeneratePriceException {
+        String splitter = generateProductCostFromInput(company);
+        if (splitter.equals("-1")){
+            throw new UnableToGeneratePriceException("Unable to generate company");
+        }
+
+        String dataToFindCompany = company.split(splitter)[1].trim();
+        String dataToReturn = dataToFindCompany.split(Const.SINGLE_SPACE_SEPARATOR)[0];
+        return dataToReturn;
     }
 
     public static boolean stringContainNumber(String str) {
@@ -42,24 +63,31 @@ public class FunctionsUtils {
 
 
     @NotNull
-    public static StringBuilder generateProductNoteFromInput(String note) {
-        String[] messageSplitter = note.split(" ");
+    public static String generateProductNoteFromInput(String note) throws UnableToGeneratePriceException {
+        String splitter = generateProductCostFromInput(note);
+
+        if (splitter.equals("-1")){
+            throw new UnableToGeneratePriceException("Unable to generate Note");
+        }
+        String dataToFindNote = note.split(splitter)[1];
+
+        String[] messageSplitter = dataToFindNote.split(Const.SINGLE_SPACE_SEPARATOR);
         StringBuilder noteBuilder = new StringBuilder();
 
-        boolean noNoteInserted = messageSplitter.length == 3;
+        boolean noNoteInserted = messageSplitter.length == 2;
         if (noNoteInserted) {
             noteBuilder.append("No note added");
-            return noteBuilder;
+            return noteBuilder.toString();
         }
 
         int i;
-        for (i = 3; i <= messageSplitter.length - 2; i++) {
+        for (i = 2; i <= messageSplitter.length - 2; i++) {
             noteBuilder.append(messageSplitter[i]);
-            noteBuilder.append(" ");
+            noteBuilder.append(Const.SINGLE_SPACE_SEPARATOR);
         }
         noteBuilder.append(messageSplitter[i]);
 
-        return noteBuilder;
+        return noteBuilder.toString();
     }
 
     public static String dbStatusCheckInline(IDatabase database) throws SQLException {
@@ -73,7 +101,8 @@ public class FunctionsUtils {
 
 
 
-    public static EditMessageText monthlyCategoryButtonsDispatcher(String command, Update update, DatabaseAction databaseAction) throws SQLException {
+    public static EditMessageText monthlyCategoryButtonsDispatcher
+            (String command, Update update, DatabaseAction databaseAction) throws SQLException {
         InlineKeyboard inlineKeyboard = new InlineKeyboard();
         String category = command.split("-")[1];
         String identifier = command.split("-")[0];
@@ -187,18 +216,26 @@ public class FunctionsUtils {
 
     public static void salaryInitializationFromInput(SendMessage message, String command)  {
         JsonWorkloads jsonWorkloads = new JsonWorkloads();
+
         if (command.contains("one")) {
-            String firstSalary = command.split(" ")[2];
+            String firstSalary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
             jsonWorkloads.jsonWriter("First_Salary" , firstSalary , "./vars.json");
             message.setText("First salary initialized");
 
         } else if (command.contains("two")) {
-            String secondSalary = command.split(" ")[2];
+            String secondSalary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
             jsonWorkloads.jsonWriter("Second_Salary" , secondSalary , "./vars.json");
             message.setText("Second salary initialized");
 
         } else
             message.setText("Salary initialization failed");
+    }
+
+    public static List<String> getApprovedChats(){
+        String approvedChats = System.getenv("APPROVED_CHATS");
+        List<String> chatsToReturn =
+                Arrays.stream(approvedChats.split(",")).map(String::trim).collect(Collectors.toList());
+        return chatsToReturn;
     }
 
     public static String getCurrentMonth() {
