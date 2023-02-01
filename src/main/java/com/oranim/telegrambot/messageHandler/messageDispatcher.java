@@ -1,6 +1,7 @@
 package com.oranim.telegrambot.messageHandler;
 
 import com.oranim.telegrambot.Exception.IllegalSalaryException;
+import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
 import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
@@ -55,21 +56,21 @@ public class messageDispatcher {
 
 
     public void inLineCallBackHandler(SendMessage message, String command,
-                                      List<String> approvedCompanies, IDatabase database) throws SQLException, IllegalSalaryException {
+                                      List<String> approvedCompanies, IDatabase database) throws SQLException, UnableToGeneratePriceException {
 
 
             if (command.toLowerCase().contains("salary")) {
             FunctionsUtils.salaryInitializationFromInput(message,command);
         }
 
-        if (command.contains("GetTransactionInPlace" + Const.SEPARATOR)) {
+        if (command.contains("GetTransactionInPlace" + Const.DOUBLE_SEMICOLON_SEPARATOR)) {
             DatabaseAction databaseAction = new DatabaseAction();
-            int transactionNumber = Integer.parseInt(command.split(Const.SEPARATOR)[1]);
+            int transactionNumber = Integer.parseInt(command.split(Const.DOUBLE_SEMICOLON_SEPARATOR)[1]);
             message.setText(databaseAction.dbRecordsToMap(transactionNumber));
         }
 
 
-        if (command.contains(" ") && approvedCompanies.contains(FunctionsUtils.generateProductCompanyFromInput(command))) {
+        if (command.contains(Const.SINGLE_SPACE_SEPARATOR) && approvedCompanies.contains(FunctionsUtils.generateProductCompanyFromInput(command))) {
             if (FunctionsUtils.stringContainNumber(FunctionsUtils.generateProductCostFromInput(command))) {
                 FunctionsUtils.inputInsertionAndValidation(command, message, database);
             }
@@ -81,9 +82,9 @@ public class messageDispatcher {
     public EditMessageText editedMessageReply(Update update, SendMessage message, String command, DatabaseAction databaseAction, IDatabase database) throws SQLException {
         EditMessageText editedMessage = null;
 
-        //TODO complete this
-        if (command.contains("GET_YEAR"+ Const.SEPARATOR)){
-            int year = Integer.parseInt(command.split(Const.SEPARATOR)[1]);
+
+        if (command.contains("GET_YEAR"+ Const.DOUBLE_SEMICOLON_SEPARATOR)){
+            int year = Integer.parseInt(command.split(Const.DOUBLE_SEMICOLON_SEPARATOR)[1]);
             editedMessage = KeyboardBuilders.createEditMessageInline("Expenses for year " + year,
                     new InlineKeyboard().generateMonthsInKeyboardMarkup(year) , update);
         }
@@ -94,8 +95,8 @@ public class messageDispatcher {
         }
 
 
-        if (command.contains("SendChatId.admin" + Const.SEPARATOR)) {
-            String chatID = command.split(Const.SEPARATOR)[1];
+        if (command.contains("SendChatId.admin" + Const.DOUBLE_SEMICOLON_SEPARATOR)) {
+            String chatID = command.split(Const.DOUBLE_SEMICOLON_SEPARATOR)[1];
             editedMessage = KeyboardBuilders.createEditMessageText(chatID, update);
         }
 
@@ -105,13 +106,13 @@ public class messageDispatcher {
         }
 
 
-        if (command.contains("monthDbCheck" + Const.SEPARATOR)) {
+        if (command.contains("monthDbCheck" + Const.DOUBLE_SEMICOLON_SEPARATOR)) {
             InlineKeyboard inlineKeyboard = new InlineKeyboard();
-            String month = command.split(Const.SEPARATOR)[1];
-            String year = command.split(Const.SEPARATOR)[2];
+            String month = command.split(Const.DOUBLE_SEMICOLON_SEPARATOR)[1];
+            String year = command.split(Const.DOUBLE_SEMICOLON_SEPARATOR)[2];
 
             if (databaseAction.getExpensesByDates(month,year).isEmpty()) {
-                String messageText = "No Expenses in " + FunctionsUtils.formatNumberMonthsToNames(month) +" " + year +".";
+                String messageText = "No Expenses in " + FunctionsUtils.formatNumberMonthsToNames(month) +Const.SINGLE_SPACE_SEPARATOR + year +".";
                 editedMessage = KeyboardBuilders.createEditMessageText(messageText, update);
             }else {
                 editedMessage = KeyboardBuilders.createEditMessageInline( FunctionsUtils.formatNumberMonthsToNames(month) + " Expenses:\n",

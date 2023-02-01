@@ -31,7 +31,7 @@ public class InlineKeyboard {
 
             for (int i = 1; i <= 12; i++) {
                 String textButton = i + "/" + year;
-                String callbackData = "monthDbCheck" + Const.SEPARATOR + i + Const.SEPARATOR + year;
+                String callbackData = "monthDbCheck" + Const.DOUBLE_SEMICOLON_SEPARATOR + i + Const.DOUBLE_SEMICOLON_SEPARATOR + year;
 
                 buttons.add(KeyboardBuilders.createNewKeyboardButton(textButton, callbackData));
 
@@ -58,7 +58,7 @@ public class InlineKeyboard {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
 
         generateYearsForInlineMarkup(startYear).forEach(year -> {
-            String callbackData = "GET_YEAR" + Const.SEPARATOR + year;
+            String callbackData = "GET_YEAR" + Const.DOUBLE_SEMICOLON_SEPARATOR + year;
             buttons.add(KeyboardBuilders.createNewKeyboardButton(year.toString(), callbackData));
         });
         rowList.add(buttons);
@@ -90,7 +90,7 @@ public class InlineKeyboard {
      */
     public InlineKeyboardMarkup adminKeyboardMarkup(SendMessage message) {
         List<InlineKeyboardButton> adminButton = new ArrayList<>();
-        adminButton.add(KeyboardBuilders.createNewKeyboardButton("ChatID", "SendChatId.admin" + Const.SEPARATOR + message.getChatId()));
+        adminButton.add(KeyboardBuilders.createNewKeyboardButton("ChatID", "SendChatId.admin" + Const.DOUBLE_SEMICOLON_SEPARATOR + message.getChatId()));
         adminButton.add(KeyboardBuilders.createNewKeyboardButton("DBStatus", "checkDBS.admin"));
         return KeyboardBuilders.createNewKeyboardFromRows(KeyboardBuilders.createNewKeyboardRows(adminButton));
     }
@@ -154,7 +154,7 @@ public class InlineKeyboard {
                 rowList.add(buttons);
                 buttons = new ArrayList<>();
             }
-            buttons.add(KeyboardBuilders.createNewKeyboardButton(buttonTextFormat, "GetTransactionInPlace" + Const.SEPARATOR + columID.get(i)));
+            buttons.add(KeyboardBuilders.createNewKeyboardButton(buttonTextFormat, "GetTransactionInPlace" + Const.DOUBLE_SEMICOLON_SEPARATOR + columID.get(i)));
 
         }
         rowList.add(buttons);
