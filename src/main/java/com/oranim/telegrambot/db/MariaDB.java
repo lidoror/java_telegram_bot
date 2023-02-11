@@ -60,12 +60,12 @@ public class MariaDB implements IDatabase {
 
     /**
      * takes list of shopping mgmt and adds the records from the db to it
-     * @param records is the list we want to add the records from the db
+     *
+     * @param records   is the list we want to add the records from the db
      * @param resultSet is the value we got from the db after the request
-     * @return list of shopping mgmt records
      * @throws SQLException if the function wasn't able to get the date from the resultSet
      */
-    private List<ShoppingMgmtRecord> returnRecordsAsShoppingMGMT(List<ShoppingMgmtRecord> records, ResultSet resultSet) throws SQLException {
+    private void returnRecordsAsShoppingMGMT(List<ShoppingMgmtRecord> records, ResultSet resultSet) throws SQLException {
 
         String product = resultSet.getString(1);
         String price = resultSet.getString(2);
@@ -79,7 +79,6 @@ public class MariaDB implements IDatabase {
                         product,price,company,note,purchaseDate,index_value
                 )
         );
-        return records;
     }
 
 
