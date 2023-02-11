@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
                 IMAGE_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
-                IMAGE_NAME =***REMOVED***or-java-telegram-bot
+                IMAGE_NAME = "***REMOVED***or-java-telegram-bot"
                 }
 
     stages {
