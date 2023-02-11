@@ -36,8 +36,7 @@ public class Execution {
             //todo getting doc into bot
             boolean messageContainDoc = update.getMessage() != null && update.getMessage().getDocument() != null;
             if (messageContainDoc ){
-                System.out.println("doc");
-                GetFile fileRequest = new GetFile();
+
             }
 
             if (keyboardButtonsCommendsList.contains(command.toLowerCase())) {
