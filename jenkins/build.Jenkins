@@ -6,6 +6,11 @@ pipeline {
                 }
 
     stages {
+        stage('jar') {
+            steps {
+                sh 'mvn clean compile assembly:single '
+            }
+        }
         stage('Build') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
