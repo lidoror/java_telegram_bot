@@ -6,18 +6,18 @@ pipeline {
                 }
 
     stages {
-        stage('jar building') {
+        stage('jar build') {
             steps {
                 sh 'mvn clean compile assembly:single '
             }
         }
-        stage('Build') {
+        stage('Docker image Build') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
             }
         }
 
-        stage('Trigger Deploy') {
+        stage('Trigger Deploy Pipeline') {
             steps {
                 build job: "deployJavaTelegramBot", wait: false, parameters: [
                     string(name: 'JBOT_IMAGE_NAME', value: "${IMAGE_NAME}:${IMAGE_TAG}")
@@ -26,7 +26,7 @@ pipeline {
         }
 
     }
-    post{
+    post('Prune Old Docker Images'){
                 always{
                     sh 'docker image prune -a --filter "until=240h" -f'
                 }
