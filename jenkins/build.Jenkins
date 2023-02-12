@@ -20,7 +20,7 @@ pipeline {
         stage('Trigger Deploy Pipeline') {
             steps {
                 build job: "deployJavaTelegramBot", wait: false, parameters: [
-                    string(name: 'JBOT_IMAGE_NAME', value: "${IMAGE_NAME}:${IMAGE_TAG}")
+                    string(name: 'JBOT_IMAGE_NAME', value: '$IMAGE_NAME:$IMAGE_TAG')
                 ]
             }
         }
