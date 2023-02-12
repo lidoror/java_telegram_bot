@@ -16,11 +16,6 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
             }
         }
-        post{
-            always{
-                sh 'docker image prune -a --filter "until=240h" -f'
-            }
-        }
 
         stage('Trigger Deploy') {
             steps {
@@ -31,4 +26,9 @@ pipeline {
         }
 
     }
+    post{
+                always{
+                    sh 'docker image prune -a --filter "until=240h" -f'
+                }
+            }
 }
