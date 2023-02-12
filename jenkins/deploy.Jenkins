@@ -4,11 +4,14 @@ pipeline {
     parameters { string(name: 'JBOT_IMAGE_NAME', defaultValue: 'None', description: '') }
 
     stages('Deploy') {
-        steps{
-            sh 'echo $JBOT_IMAGE_NAME'
+
+        stage{
+            steps{
+                sh 'echo $JBOT_IMAGE_NAME'
 
 
 
+            }
         }
 
     }
