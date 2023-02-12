@@ -23,7 +23,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.oranim.TelegramBot.Main</mainClass>
+                            <mainClass>com.oranim.telegrambot.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
