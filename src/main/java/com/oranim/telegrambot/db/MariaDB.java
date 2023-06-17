@@ -1,6 +1,10 @@
 package com.oranim.telegrambot.db;
 
 import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
+import com.oranim.telegrambot.InputExtractor.CompanyInputExtractor;
+import com.oranim.telegrambot.InputExtractor.NoteInputExtractor;
+import com.oranim.telegrambot.InputExtractor.PriceInputExtractor;
+import com.oranim.telegrambot.InputExtractor.ProductNameInputExtractor;
 import com.oranim.telegrambot.utils.BotLogging;
 import com.oranim.telegrambot.utils.FunctionsUtils;
 
@@ -143,10 +147,10 @@ public class MariaDB implements IDatabase {
     public void setDbParameter(String command){
         try {
             insertDataToDB(
-                    FunctionsUtils.generateProductFromInput(command),
-                    FunctionsUtils.generateProductCostFromInput(command),
-                    FunctionsUtils.generateProductCompanyFromInput(command),
-                    FunctionsUtils.generateProductNoteFromInput(command)
+                    new ProductNameInputExtractor().getInput(command),
+                    new PriceInputExtractor().getInput(command),
+                    new CompanyInputExtractor().getInput(command),
+                    new NoteInputExtractor().getInput(command)
             );
         }catch (UnableToGeneratePriceException exception){
             BotLogging.setInfoLog(classLog("setDbParameter", Arrays.toString(exception.getStackTrace())));

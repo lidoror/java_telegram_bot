@@ -2,6 +2,8 @@ package com.oranim.telegrambot.messageHandler;
 
 import com.oranim.telegrambot.Exception.IllegalSalaryException;
 import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
+import com.oranim.telegrambot.InputExtractor.CompanyInputExtractor;
+import com.oranim.telegrambot.InputExtractor.PriceInputExtractor;
 import com.oranim.telegrambot.db.DatabaseAction;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
@@ -70,8 +72,8 @@ public class messageDispatcher {
         }
 
 
-        if (command.contains(Const.SINGLE_SPACE_SEPARATOR) && approvedCompanies.contains(FunctionsUtils.generateProductCompanyFromInput(command))) {
-            if (FunctionsUtils.stringContainNumber(FunctionsUtils.generateProductCostFromInput(command))) {
+        if (command.contains(Const.SINGLE_SPACE_SEPARATOR) && approvedCompanies.contains(new CompanyInputExtractor().getInput(command) )) {
+            if (FunctionsUtils.stringContainNumber(new PriceInputExtractor().getInput(command))) {
                 FunctionsUtils.inputInsertionAndValidation(command, message, database);
             }
         }

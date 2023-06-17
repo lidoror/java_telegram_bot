@@ -33,7 +33,7 @@ public class Execution {
     @SuppressWarnings("rawtypes")
     public BotApiMethod messageDispatcher(String command, SendMessage message, Update update) {
         try {
-            //todo getting doc into bot
+            // todo getting doc into bot
             boolean messageContainDoc = update.getMessage() != null && update.getMessage().getDocument() != null;
             if (messageContainDoc ){
 
