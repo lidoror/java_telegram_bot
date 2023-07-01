@@ -37,3 +37,6 @@ TelegramBotNew.iml
 
 src/main/resources/META-INF/MANIFEST.MF
 example.log
+
+
+/.env
