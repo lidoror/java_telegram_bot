@@ -4,4 +4,6 @@ WORKDIR /TelgramBot
 
 COPY ./target/TelegramBotNew-1.0-jar-with-dependencies.jar ./TelegramBotJar.jar
 
+RUN mkdir data
+
 CMD ["java" ,"-jar" , "TelegramBotJar.jar" ]
