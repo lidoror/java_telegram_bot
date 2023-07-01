@@ -38,18 +38,18 @@ stages:
                 effectivePomSkip: false
                 sonarQubeRunAnalysis: false
                 
-        
+
             - task: CopyFiles@2
               inputs:
                 SourceFolder: 'target'
-                Contents: 'TelegramBot-*.jar'
+                Contents: '**/.jar'
                 TargetFolder: '$(build.artifactstagingdirectory)'
 
             - task: PublishBuildArtifacts@1
               inputs:
                 PathtoPublish: '$(build.artifactstagingdirectory)'
-                ArtifactName: 'TelegramBot-*.jar'
-                publishLocation: 'Container'    
+                ArtifactName: '**/.jar'
+                publishLocation: 'Container'
             
             - task: Bash@3
               inputs:
