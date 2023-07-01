@@ -1,5 +1,6 @@
 package com.oranim.telegrambot.db;
 
+import com.oranim.telegrambot.Exception.NoConnectionToDbException;
 import com.oranim.telegrambot.utils.FunctionsUtils;
 
 import java.sql.SQLException;
@@ -8,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DatabaseAction {
+public class MessagesService {
 
 
-    IDatabase database = new MariaDB();
+    private IDatabase database = new MessagesDAO();
 
-    public DatabaseAction(){}
+    public MessagesService(){}
 
     /**
      * this function return records between two dates
@@ -78,6 +79,19 @@ public class DatabaseAction {
      */
     public String dbRecordsToMap(int mapKey) throws SQLException {
         return String.valueOf(database.dbListToMap().get(mapKey));
+    }
+
+    /**
+     * checks connection to the db
+     * @param database is the object which contain the db data
+     * @return string that contain message of db connection status
+     * @throws NoConnectionToDbException after checking connection to db and failed
+     */
+    public String dbStatusCheckInline(IDatabase database) throws SQLException {
+        if (database.checkConnection()) {
+            return "Connection to Database achieved";
+        } else
+            throw new NoConnectionToDbException("Cannot connect to Database");
     }
 
 

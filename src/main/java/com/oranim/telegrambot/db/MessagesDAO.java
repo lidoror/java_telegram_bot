@@ -6,19 +6,34 @@ import com.oranim.telegrambot.InputExtractor.NoteInputExtractor;
 import com.oranim.telegrambot.InputExtractor.PriceInputExtractor;
 import com.oranim.telegrambot.InputExtractor.ProductNameInputExtractor;
 import com.oranim.telegrambot.utils.BotLogging;
-import com.oranim.telegrambot.utils.FunctionsUtils;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
 
-public class MariaDB implements IDatabase {
+public class MessagesDAO implements IDatabase {
 
-    private final String dbConnectionString = System.getenv("MARIADB_URL");
+    private final String dbUser = System.getenv("DB_User");
+    private final String dbPassword = System.getenv("DB_Pass");
+    private final String dbConnection = System.getenv("DB_CONNECTION");
+    private final String dbAddress = System.getenv("DB_ADDRESS");
+    private final String database = System.getenv("DATABASE");
+    private final String dbPort = System.getenv("DB_PORT");
 
 
 
-    public MariaDB(){}
+
+    public MessagesDAO(){}
+
+    /**
+     * this function takes all the env vars and concatenate them into one connection string
+     * @return connection string
+     */
+    private String getDbConnectionAddress(){
+        return String.format(
+                "jdbc:%s://%s:%s/%s?user=%s&password=%s&serverTimezone=UTC"
+                ,dbConnection,dbAddress,dbPort,database,dbUser,dbPassword
+        );
+    }
 
     /**
      * This method establish connection with the mariadb databases
@@ -27,7 +42,7 @@ public class MariaDB implements IDatabase {
     private Connection getDbConnection(){
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(dbConnectionString);
+            connection = DriverManager.getConnection(getDbConnectionAddress());
 
         } catch (SQLException sqlException) {
             BotLogging.setCriticalLog(classLog("getDBConnection", Arrays.toString(sqlException.getStackTrace())));
@@ -166,7 +181,7 @@ public class MariaDB implements IDatabase {
     @Override
     public boolean checkConnection() throws SQLException{
         Connection connection =
-                DriverManager.getConnection(dbConnectionString);
+                DriverManager.getConnection(getDbConnectionAddress());
         boolean isValid = connection.isValid(2);
         connection.close();
         return isValid;
@@ -187,7 +202,7 @@ public class MariaDB implements IDatabase {
     }
 
     private String classLog(String method ,String stackTrace){
-        return "An exception occurred in class %s method %s \nStack Trace:\n %s".formatted(method,MariaDB.class.getName() , stackTrace);
+        return "An exception occurred in class %s method %s \nStack Trace:\n %s".formatted(method, MessagesDAO.class.getName() , stackTrace);
     }
 
 

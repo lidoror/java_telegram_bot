@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class MariaDBTest {
-    MariaDB db = new MariaDB();
+class MessagesDAOTest {
+    MessagesDAO db = new MessagesDAO();
 
     @Test
     void checkConnection() throws SQLException {

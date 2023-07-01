@@ -1,9 +1,8 @@
 package com.oranim.telegrambot.utils;
 
-import com.oranim.telegrambot.Exception.NoConnectionToDbException;
 import com.oranim.telegrambot.InputExtractor.PriceInputExtractor;
 import com.oranim.telegrambot.balanceMgmt.Balance;
-import com.oranim.telegrambot.db.DatabaseAction;
+import com.oranim.telegrambot.db.MessagesService;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
 import com.oranim.telegrambot.keyboards.KeyboardBuilders;
@@ -11,11 +10,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,21 +26,8 @@ public class FunctionsUtils {
     }
 
 
-
-
-    public static String dbStatusCheckInline(IDatabase database) throws SQLException {
-        if (database.checkConnection()) {
-            return "Connection to Database achieved";
-        } else
-            throw new NoConnectionToDbException("Cannot connect to Database");
-    }
-
-
-
-
-
     public static EditMessageText monthlyCategoryButtonsDispatcher
-            (String command, Update update, DatabaseAction databaseAction) throws SQLException {
+            (String command, Update update, MessagesService messagesService) throws SQLException {
         InlineKeyboard inlineKeyboard = new InlineKeyboard();
         String category = command.split("-")[1];
         String identifier = command.split("-")[0];
@@ -56,21 +40,21 @@ public class FunctionsUtils {
         if (identifier.contains("monthlyCategory")) {
             editedKeyboard =
                     KeyboardBuilders.createEditMessageInline(textFormat,
-                            inlineKeyboard.listToTransactionInline(databaseAction
+                            inlineKeyboard.listToTransactionInline(messagesService
                                     .getMonthlyCategoryRecord(categoryMapper(category))), update);
         }
         if (command.equals("monthlyCategory-All")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageInline("All Expenses:\n", inlineKeyboard.listToTransactionInline(databaseAction.getExpensesByDates(getCurrentMonth() , getCurrentYear())), update);
+                    KeyboardBuilders.createEditMessageInline("All Expenses:\n", inlineKeyboard.listToTransactionInline(messagesService.getExpensesByDates(getCurrentMonth() , getCurrentYear())), update);
         }
 
         if (command.equals("monthlySum-All")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageText("All Spending:\n" + databaseAction.getTotalMoneySpentCurrentMonth(getCurrentMonth(),getCurrentYear()), update);
+                    KeyboardBuilders.createEditMessageText("All Spending:\n" + messagesService.getTotalMoneySpentCurrentMonth(getCurrentMonth(),getCurrentYear()), update);
 
         } else if (identifier.equals("monthlySum")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageText(textFormat + databaseAction.getCategoryMonthlySpent(categoryMapper(category)), update);
+                    KeyboardBuilders.createEditMessageText(textFormat + messagesService.getCategoryMonthlySpent(categoryMapper(category)), update);
         }
         return editedKeyboard;
     }
@@ -107,70 +91,7 @@ public class FunctionsUtils {
 
 
 
-    public static List<String> getKeyboardButtonsCommands() {
-        return List.of("/start", "expenses", "refund", "balance", "monthly spent",
-                "monthly expenses", "overall expenses", "/showcompany", "admincenter");
-    }
 
-    public static String formatNumberMonthsToNames(String month) {
-        Map<String,String> monthMapper = new HashMap<>();
-        monthMapper.put("1","January");
-        monthMapper.put("2","February");
-        monthMapper.put("3","March");
-        monthMapper.put("4","April");
-        monthMapper.put("5","May");
-        monthMapper.put("6","June");
-        monthMapper.put("7","July");
-        monthMapper.put("8","August");
-        monthMapper.put("9","September");
-        monthMapper.put("10","October");
-        monthMapper.put("11","November");
-        monthMapper.put("12","December");
-
-        return monthMapper.get(month);
-    }
-
-
-    public static List<String> getApprovedCompanies() {
-        return List.of("דלק", "כללי", "משותף", "קניות", "אוכל");
-    }
-
-    public static List<String> getEditedMessage() {
-        return List.of("Back",
-                "monthlySum-Fuel",
-                "monthlyCategory-All",
-                "monthlySum-House Shopping",
-                "monthlySum-Shopping",
-                "monthlySum-Food",
-                "monthlySum-General",
-                "monthlySum-All",
-                "monthlyCategory-Fuel",
-                "monthlyCategory-House Shopping",
-                "monthlyCategory-Shopping",
-                "monthlyCategory-Food",
-                "monthlyCategory-General",
-                "checkDBS.admin",
-                "SendChatId.admin",
-                "monthDbCheck",
-                "GET_YEAR");
-    }
-
-    public static void salaryInitializationFromInput(SendMessage message, String command)  {
-        JsonWorkloads jsonWorkloads = new JsonWorkloads();
-
-        if (command.contains("one")) {
-            String firstSalary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
-            jsonWorkloads.jsonWriter("First_Salary" , firstSalary , "./vars.json");
-            message.setText("First salary initialized");
-
-        } else if (command.contains("two")) {
-            String secondSalary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
-            jsonWorkloads.jsonWriter("Second_Salary" , secondSalary , "./vars.json");
-            message.setText("Second salary initialized");
-
-        } else
-            message.setText("Salary initialization failed");
-    }
 
     public static List<String> getApprovedChats(){
         String approvedChats = System.getenv("APPROVED_CHATS");
