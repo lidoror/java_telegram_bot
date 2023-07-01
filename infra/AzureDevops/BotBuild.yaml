@@ -38,17 +38,6 @@ stages:
                 effectivePomSkip: false
                 sonarQubeRunAnalysis: false
                 
-            
-            - task: CopyFiles@2
-              inputs:
-                Contents: '**/.jar'
-                TargetFolder: '$(build.artifactstagingdirectory)'
-
-            - task: PublishBuildArtifacts@1
-              inputs:
-                PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-                ArtifactName: 'JavaTelegramBot.ja'
-                publishLocation: 'Container'
         
           - job: BuildPushDockerImage
             dependsOn: BuildJar
@@ -80,6 +69,20 @@ stages:
                 sourceImageId: '$(IMAGE_REGISTRY):$(GIT_COMMIT)'
                 repositoryName: '$(IMAGE_REGISTRY)'
                 pushTag: '$(GIT_COMMIT)'
+          
+          - job:  PushJarAsArtifact
+            dependsOn: BuildPushDockerImage
+            steps:
+            - task: CopyFiles@2
+              inputs:
+                Contents: '**/.jar'
+                TargetFolder: '$(build.artifactstagingdirectory)'
+
+            - task: PublishBuildArtifacts@1
+              inputs:
+                PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+                ArtifactName: 'JavaTelegramBot.ja'
+                publishLocation: 'Container'
 
         
 
