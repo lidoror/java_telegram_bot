@@ -5,7 +5,6 @@ public record ShoppingMgmtRecord(String product, String price, String category,
                                  String note, String purchaseDate, int columID) {
 
 
-
     @Override
     public String toString(){
         return
