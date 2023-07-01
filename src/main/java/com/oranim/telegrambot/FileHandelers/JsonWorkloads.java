@@ -1,5 +1,6 @@
-package com.oranim.telegrambot.utils;
+package com.oranim.telegrambot.FileHandelers;
 
+import com.oranim.telegrambot.utils.BotLogging;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

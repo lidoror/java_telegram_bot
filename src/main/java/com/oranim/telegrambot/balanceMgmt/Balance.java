@@ -1,9 +1,9 @@
 package com.oranim.telegrambot.balanceMgmt;
 
-import com.oranim.telegrambot.db.DatabaseAction;
+import com.oranim.telegrambot.db.MessagesService;
 import com.oranim.telegrambot.utils.BotLogging;
 import com.oranim.telegrambot.utils.FunctionsUtils;
-import com.oranim.telegrambot.utils.JsonWorkloads;
+import com.oranim.telegrambot.FileHandelers.JsonWorkloads;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -17,7 +17,7 @@ public class Balance {
 
     public Double getBalance() throws SQLException {
         BotLogging.setInfoLog(classLog("getBalance","this method can throw sql exception"));
-        balance = salary - Double.parseDouble(new DatabaseAction().getTotalMoneySpentCurrentMonth(FunctionsUtils.getCurrentMonth(),FunctionsUtils.getCurrentMonth()));
+        balance = salary - Double.parseDouble(new MessagesService().getTotalMoneySpentCurrentMonth(FunctionsUtils.getCurrentMonth(),FunctionsUtils.getCurrentMonth()));
         return balance;
     }
 
