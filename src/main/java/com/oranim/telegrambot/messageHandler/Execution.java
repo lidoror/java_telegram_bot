@@ -1,31 +1,31 @@
 package com.oranim.telegrambot.messageHandler;
 
-import com.oranim.telegrambot.db.DatabaseAction;
+import com.oranim.telegrambot.InputExtractor.CompanyInputExtractor;
+import com.oranim.telegrambot.InputExtractor.PriceInputExtractor;
+import com.oranim.telegrambot.db.MessagesService;
 import com.oranim.telegrambot.db.IDatabase;
-import com.oranim.telegrambot.db.MariaDB;
+import com.oranim.telegrambot.db.MessagesDAO;
 import com.oranim.telegrambot.keyboards.InlineKeyboard;
 import com.oranim.telegrambot.utils.BotLogging;
 import com.oranim.telegrambot.utils.FunctionsUtils;
+import com.oranim.telegrambot.utils.ListAndMappersUtils;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class Execution {
-    private final List<String> keyboardButtonsCommendsList = FunctionsUtils.getKeyboardButtonsCommands();
-    private final List<String> approvedCompaniesList = FunctionsUtils.getApprovedCompanies();
-    private final List<String> editedMessageList = FunctionsUtils.getEditedMessage();
-
+    private final List<String> approvedCompaniesList = new ListAndMappersUtils().getApprovedCompanies();
+    private final List<String> editedMessageList = new ListAndMappersUtils().getEditedMessage();
+    private final List<String> messagesWithCallback = new ListAndMappersUtils().getMessagesWithCallbackList();
 
     InlineKeyboard inLine = new InlineKeyboard();
     messageDispatcher messageDispatcher = new messageDispatcher();
-    IDatabase database = new MariaDB();
-    DatabaseAction databaseAction = new DatabaseAction();
+    IDatabase database = new MessagesDAO();
+    MessagesService messagesService = new MessagesService();
 
     public Execution() {
     }
@@ -39,14 +39,23 @@ public class Execution {
 
             }
 
-            if (keyboardButtonsCommendsList.contains(command.toLowerCase())) {
-                return messageDispatcher.keyboardButtonsHandler(message, command, inLine, approvedCompaniesList, update);
-
-            } else if (listContainArg(command)) {
-                return messageDispatcher.editedMessageReply(update, message, command, databaseAction, database);
+            boolean messageToDB = FunctionsUtils.stringContainNumber(command) && approvedCompaniesList.contains(new CompanyInputExtractor().getInput(command));
+            if (messageToDB) {
+                if (FunctionsUtils.stringContainNumber(new PriceInputExtractor().getInput(command))) {
+                    FunctionsUtils.inputInsertionAndValidation(command, message, database);
+                }
             }
 
-            messageDispatcher.inLineCallBackHandler(message, command, approvedCompaniesList, database);
+            if (listContainArg(command,messagesWithCallback)){
+                messageDispatcher.inlineWithCallbackData(message, command);
+            }
+            else if (listContainArg(command,editedMessageList)) {
+                return messageDispatcher.editedMessageReply(update, message, command, messagesService, database);
+            }
+            else  {
+                return messageDispatcher.keyboardButtonsHandler(message, command, inLine, approvedCompaniesList, update);
+            }
+
 
 
         } catch (SQLException sqlException) {
@@ -57,11 +66,12 @@ public class Execution {
             BotLogging.setInfoLog(classLog("Exception catch", Arrays.toString(exception.getStackTrace()) ));
 
         }
+
         return message;
     }
 
-    private boolean listContainArg(String arg) {
-        for (var message : editedMessageList) {
+    private boolean listContainArg(String arg , List<String> lst) {
+        for (var message : lst) {
             if (arg.contains(message)) {
                 return true;
             }
