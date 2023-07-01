@@ -73,7 +73,7 @@ stages:
             - task: ECRPushImage@1
               displayName: PushImage
               inputs:
-                awsCredentials: $(REGISTRY_CONNECTIO)
+                awsCredentials: $(REGISTRY_CONNECTION)
                 regionName: us-east-1
                 imageSource: 'imageid'
                 sourceImageId: '$(IMAGE_REGISTRY):$(GIT_COMMIT)'
