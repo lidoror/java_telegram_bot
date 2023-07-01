@@ -1,0 +1,85 @@
+name: JavaBotBuild
+
+trigger:
+    branches:
+        include:
+            - master
+    paths:
+        include:
+            - src/main/java/com/oranim/telegrambot/*
+            - infra/AzureDevops/BotBuild.yaml
+            - infra/helm/TelegramBotJava/*
+
+pool:
+    Azure Pipelines
+variables:
+
+    REGISTRY_CONNECTION: AWS ECR
+    IMAGE_REGISTRY: telegram_bot_java
+    IMAGE_REPOSETORY: 851330817509.dkr.ecr.us-east-1.amazonaws.com
+
+
+stages:
+    - stage: BuildArtifact
+      jobs:
+          - job: BuildJar
+            steps:
+                
+            - task: Maven@4
+              inputs:
+                mavenPomFile: 'pom.xml'
+                publishJUnitResults: true
+                testResultsFiles: '**/surefire-reports/TEST-*.xml'
+                javaHomeOption: 'JDKVersion'
+                mavenVersionOption: 'Default'
+                mavenAuthenticateFeed: false
+                effectivePomSkip: false
+                sonarQubeRunAnalysis: false
+                goals: package
+                
+            
+            - task: CopyFiles@2
+              inputs:
+                Contents: '**/.jar'
+                TargetFolder: '$(build.artifactstagingdirectory)'
+
+            - task: PublishBuildArtifacts@1
+              inputs:
+                PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+                ArtifactName: 'JavaTelegramBot.ja'
+                publishLocation: 'Container'
+        
+          - job: BuildPushDockerImage
+            dependsOn: BuildArtifact
+            steps:
+                
+            - task: Bash@3
+              inputs:
+                targetType: 'inline'
+                script: |
+                    GIT_COMMIT=$(git rev-parse --short HEAD)
+                    
+                    echo "GIT_COMMIT: ${GIT_COMMIT}"
+                    
+                    #
+                    # set env variable to allow next task to consume
+                    #
+                    echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
+
+            - script: docker build -f infra/Dockerfiles/BotBuild.Dockerfile -t $(IMAGE_REGISTRY):$(GIT_COMMIT) .
+              displayName: ImageBuild 
+              
+
+            - task: ECRPushImage@1
+              displayName: PushImage
+              inputs:
+                awsCredentials: $(REGISTRY_CONNECTIO)
+                regionName: us-east-1
+                imageSource: 'imageid'
+                sourceImageId: '$(IMAGE_REGISTRY):$(GIT_COMMIT)'
+                repositoryName: '$(IMAGE_REGISTRY)'
+                pushTag: '$(GIT_COMMIT)'
+
+        
+
+
