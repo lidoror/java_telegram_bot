@@ -14,7 +14,7 @@ pool:
     Azure Pipelines
 variables:
 
-    REGISTRY_CONNECTION: AWS ECR
+    REGISTRY_CONNECTION: 'AWS ECR'
     IMAGE_REGISTRY: telegram_bot_java
     IMAGE_REPOSETORY: 851330817509.dkr.ecr.us-east-1.amazonaws.com
 
