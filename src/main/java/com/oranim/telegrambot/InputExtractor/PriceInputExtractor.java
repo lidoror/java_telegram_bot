@@ -1,8 +1,6 @@
 package com.oranim.telegrambot.InputExtractor;
 
 
-import com.oranim.telegrambot.Exception.InputExtractionException;
-
 import java.util.regex.Pattern;
 
 public class PriceInputExtractor extends InputExtractor{

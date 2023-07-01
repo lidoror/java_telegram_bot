@@ -1,8 +1,8 @@
 package com.oranim.telegrambot.InputExtractor;
 
 import com.oranim.telegrambot.Exception.InputExtractionException;
-import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class PriceInputExtractorTest {
