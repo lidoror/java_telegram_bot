@@ -1,0 +1,9 @@
+appName: javaTelegramBot
+environment: dev
+namespace: dev
+replicas: 1
+imageRegistry: 851330817509.dkr.ecr.us-east-1.amazonaws.com
+imageName: telegram_bot_java
+imageTag: latest
+restartPolicy: always
+

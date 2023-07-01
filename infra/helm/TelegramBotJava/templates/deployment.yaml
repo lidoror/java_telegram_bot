@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { { .Values.appName } }
+  labels:
+    app.kubernetes/name: { { .Values.appName } }
+    environment: { { .Values.environment } }
+  namespace: { { .Values.namespace } }
+spec:
+  replicas: { { .Values.replicas } }
+  selector:
+    matchLabels:
+      app.kubernetes/name: { { .Values.appName } }
+  template:
+    metadata:
+      name: { { .Values.appName } }
+      labels:
+        app.kubernetes/name: { { .Values.appName } }
+    spec:
+      containers:
+        - name: { { .Values.appName } }
+          image: { { .Values.imageRegistry } }/{ { .Values.imageName } }:{ { .Values.imageTag } }
+          imagePullPolicy: IfNotPresent
+      restartPolicy: { { .Values.restartPolicy } }
+
