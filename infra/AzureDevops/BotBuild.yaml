@@ -39,9 +39,6 @@ stages:
                 sonarQubeRunAnalysis: false
                 
         
-          - job: BuildPushDockerImage
-            dependsOn: BuildJar
-            steps:
                 
             - task: Bash@3
               inputs:
@@ -70,9 +67,6 @@ stages:
                 repositoryName: '$(IMAGE_REGISTRY)'
                 pushTag: '$(GIT_COMMIT)'
           
-          - job:  PushJarAsArtifact
-            dependsOn: BuildPushDockerImage
-            steps:
             - task: CopyFiles@2
               inputs:
                 Contents: '**/.jar'
