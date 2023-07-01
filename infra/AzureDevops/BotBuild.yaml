@@ -9,6 +9,7 @@ trigger:
             - src/main/java/com/oranim/telegrambot/*
             - infra/AzureDevops/BotBuild.yaml
             - infra/helm/TelegramBotJava/*
+            - pom.xml
 
 pool:
     Azure Pipelines
