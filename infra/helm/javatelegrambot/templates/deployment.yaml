@@ -26,52 +26,52 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: APPROVED_CHATS
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: BOT_NAME
               valueFrom:
                 secretKeyRef:
                   key: BOT_NAME
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: BOT_TOKEN
               valueFrom:
                 secretKeyRef:
                   key: BOT_TOKEN
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: DATABASE
               valueFrom:
                 secretKeyRef:
                   key: DATABASE
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: DB_ADDRESS
               valueFrom:
                 secretKeyRef:
                   key: DB_ADDRESS
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: DB_CONNECTION
               valueFrom:
                 secretKeyRef:
                   key: DB_CONNECTION
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: DB_PORT
               valueFrom:
                 secretKeyRef:
                   key: DB_PORT
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: DB_Pass
               valueFrom:
                 secretKeyRef:
                   key: DB_Pass
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: DB_User
               valueFrom:
                 secretKeyRef:
                   key: DB_User
-                  name: JavaBotSecret
+                  name: java-bot-secret
             - name: START_YEAR
               valueFrom:
                 secretKeyRef:
                   key: START_YEAR
-                  name: JavaBotSecret
+                  name: java-bot-secret
 
 
       restartPolicy: {{ .Values.restartPolicy }}
