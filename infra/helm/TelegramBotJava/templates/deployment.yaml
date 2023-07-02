@@ -21,5 +21,58 @@ spec:
         - name: { { .Values.appName } }
           image: { { .Values.imageRegistry } }/{ { .Values.imageName } }:{ { .Values.imageTag } }
           imagePullPolicy: IfNotPresent
+          env:
+            - name: APPROVED_CHATS
+              valueFrom:
+                secretKeyRef:
+                  key: APPROVED_CHATS
+                  name: JavaBotSecret
+            - name: BOT_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_NAME
+                  name: JavaBotSecret
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: BOT_TOKEN
+                  name: JavaBotSecret
+            - name: DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE
+                  name: JavaBotSecret
+            - name: DB_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  key: DB_ADDRESS
+                  name: JavaBotSecret
+            - name: DB_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  key: DB_CONNECTION
+                  name: JavaBotSecret
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PORT
+                  name: JavaBotSecret
+            - name: DB_Pass
+              valueFrom:
+                secretKeyRef:
+                  key: DB_Pass
+                  name: JavaBotSecret
+            - name: DB_User
+              valueFrom:
+                secretKeyRef:
+                  key: DB_User
+                  name: JavaBotSecret
+            - name: START_YEAR
+              valueFrom:
+                secretKeyRef:
+                  key: START_YEAR
+                  name: JavaBotSecret
+
+
       restartPolicy: { { .Values.restartPolicy } }
 
