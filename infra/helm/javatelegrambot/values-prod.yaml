@@ -1,4 +1,4 @@
-appName: javaTelegramBot
+appName: java-telegram-bot
 environment: prod
 namespace: default
 replicas: 1
