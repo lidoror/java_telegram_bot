@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: { { .Values.appName } }
-          image: { { .Values.imageRegistry } }/{ { .Values.imageName } }:{ { .Values.imageTag } }
+          image: "{ { .Values.imageRegistry } }/{ { .Values.imageName } }:{ { .Values.imageTag } }"
           imagePullPolicy: IfNotPresent
           env:
             - name: APPROVED_CHATS
