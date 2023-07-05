@@ -4,6 +4,6 @@ namespace: default
 replicas: 1
 imageRegistry: 851330817509.dkr.ecr.us-east-1.amazonaws.com
 imageName: telegram_bot_java
-imageTag: 6bfb3ee
+imageTag: 0a693b2
 restartPolicy: Always
 
