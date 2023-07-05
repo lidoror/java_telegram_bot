@@ -11,13 +11,11 @@ import java.text.DecimalFormat;
 public class Balance {
 
     private double balance;
-    private final double firstSalary = getSalary("First_Salary");
-    private final double secondSalary = getSalary("Second_Salary");
-    private final double salary = firstSalary + secondSalary;
+
 
     public Double getBalance() throws SQLException {
         BotLogging.setInfoLog(classLog("getBalance","this method can throw sql exception"));
-        balance = salary - Double.parseDouble(new MessagesService().getTotalMoneySpentCurrentMonth(FunctionsUtils.getCurrentMonth(),FunctionsUtils.getCurrentMonth()));
+        balance = new Salary().getSalarySum() - Double.parseDouble(new MessagesService().getTotalMoneySpentCurrentMonth(FunctionsUtils.getCurrentMonth(),FunctionsUtils.getCurrentMonth()));
         return balance;
     }
 
@@ -31,12 +29,7 @@ public class Balance {
         return new DecimalFormat("0.00").format(getBalance());
     }
 
-    private double getSalary(String salary) {
-        JsonWorkloads jsonWorkloads = new JsonWorkloads();
-        String salaryToReturn = jsonWorkloads.jsonReader("./vars.json").get(salary).toString();
-        return Double.parseDouble(salaryToReturn);
 
-    }
 
 
     private String classLog(String method, String description) {

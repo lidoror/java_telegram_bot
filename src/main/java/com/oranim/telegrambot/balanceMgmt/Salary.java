@@ -4,7 +4,10 @@ import com.oranim.telegrambot.utils.Const;
 import com.oranim.telegrambot.FileHandelers.JsonWorkloads;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-public class SalaryActions {
+public class Salary {
+
+
+
 
     public void salaryInitializationFromInput(SendMessage message, String command)  {
         JsonWorkloads jsonWorkloads = new JsonWorkloads();
@@ -21,5 +24,19 @@ public class SalaryActions {
 
         } else
             message.setText("Salary initialization failed");
+    }
+
+    public double getSalaryFromJson(String salary) {
+        JsonWorkloads jsonWorkloads = new JsonWorkloads();
+        String salaryToReturn = jsonWorkloads.jsonReader("./data/salary.json").get(salary).toString();
+        return Double.parseDouble(salaryToReturn);
+
+    }
+
+    public double getSalarySum(){
+        double firstSalary = getSalaryFromJson("First_Salary");
+        double secondSalary = getSalaryFromJson("Second_Salary");
+        double salary = firstSalary + secondSalary;
+        return salary;
     }
 }
