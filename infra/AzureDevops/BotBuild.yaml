@@ -30,6 +30,7 @@ stages:
               displayName: BuildingJar
               inputs:
                 mavenPomFile: 'pom.xml'
+                goals: 'clean compile assembly:single'
                 publishJUnitResults: true
                 testResultsFiles: '**/surefire-reports/TEST-*.xml'
                 javaHomeOption: 'JDKVersion'
