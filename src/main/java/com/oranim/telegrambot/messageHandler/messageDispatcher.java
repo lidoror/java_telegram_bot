@@ -2,7 +2,7 @@ package com.oranim.telegrambot.messageHandler;
 
 import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
 import com.oranim.telegrambot.balanceMgmt.Balance;
-import com.oranim.telegrambot.balanceMgmt.SalaryActions;
+import com.oranim.telegrambot.balanceMgmt.Salary;
 import com.oranim.telegrambot.db.IDatabase;
 import com.oranim.telegrambot.db.MessagesService;
 import com.oranim.telegrambot.keyboards.CustomKeyboard;
@@ -60,7 +60,7 @@ public class messageDispatcher {
 
 
         if (command.toLowerCase().contains("salary")) {
-            new SalaryActions().salaryInitializationFromInput(message,command);
+            new Salary().salaryInitializationFromInput(message,command);
         }
 
         if (command.contains("GetTransactionInPlace" + Const.DOUBLE_SEMICOLON_SEPARATOR)) {
