@@ -4,7 +4,6 @@ import com.oranim.telegrambot.utils.BotLogging;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class JsonWorkloads {
         JSONObject jsonObject = new JSONObject();
 
         if (jsonExist(Path.of(filePath))){
-            jsonObject.putAll(jsonReader(filePath));
+            jsonObject.putAll(jsonReader(fileName));
         }
 
         try(FileWriter fileWriter = new FileWriter(filePath)) {
@@ -41,6 +40,7 @@ public class JsonWorkloads {
             BotLogging.setInfoLog(classLog("jsonWriter","data written to json"));
 
         }catch (IOException ioException){
+            System.out.println(Arrays.toString(ioException.getStackTrace()));
             BotLogging.setInfoLog(classLog("jsonReader", Arrays.toString(ioException.getStackTrace())));
         }
 
