@@ -16,6 +16,7 @@ public class CompanyInputExtractor extends InputExtractor{
 
     @Override
     public String getInput(String input) throws UnableToGeneratePriceException {
+
         String splitter = findPattern(input);
 
         if (splitter.equals("-1")){

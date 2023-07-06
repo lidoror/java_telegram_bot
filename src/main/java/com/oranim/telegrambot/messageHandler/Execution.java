@@ -35,16 +35,13 @@ public class Execution {
         try {
             // todo getting doc into bot
             boolean messageContainDoc = update.getMessage() != null && update.getMessage().getDocument() != null;
-            boolean messageToDB = FunctionsUtils.stringContainNumber(command) && approvedCompaniesList.contains(new CompanyInputExtractor().getInput(command));
-
 
             if (messageContainDoc ) {
 
             }
-            if (messageToDB) {
-                FunctionsUtils.inputInsertionAndValidation(command, message, database);
-                return message;
-            }
+
+
+
 
             if (listContainArg(command,messagesWithCallback)){
                 messageDispatcher.inlineWithCallbackData(message, command);
@@ -52,9 +49,21 @@ public class Execution {
             else if (listContainArg(command,editedMessageList)) {
                 return messageDispatcher.editedMessageReply(update, message, command, messagesService, database);
             }
-            else  {
-                return messageDispatcher.keyboardButtonsHandler(message, command, inLine, approvedCompaniesList, update);
+
+            boolean messageContainNumber = FunctionsUtils.stringContainNumber(command) ;
+            if (messageContainNumber) {
+
+                boolean messageContainCompany = approvedCompaniesList.contains(new CompanyInputExtractor().getInput(command));
+                if (messageContainCompany) {
+                    FunctionsUtils.inputInsertionAndValidation(command, message, database);
+                    return message;
+                }
             }
+
+            return messageDispatcher.keyboardButtonsHandler(message, command, inLine, approvedCompaniesList, update);
+
+
+
 
 
 

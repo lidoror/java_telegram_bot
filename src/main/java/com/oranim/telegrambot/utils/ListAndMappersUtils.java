@@ -65,5 +65,20 @@ public class ListAndMappersUtils {
         );
     }
 
+    public List<String> getKeyboardButtonText(){
+        return List.of(
+                "start",
+                "expenses",
+                "refund",
+                "balance",
+                "monthly spent",
+                "monthly expenses",
+                "overall expenses",
+                "admincenter",
+                "showcompany"
+
+        );
+    }
+
 
 }
