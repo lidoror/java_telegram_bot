@@ -72,6 +72,11 @@ spec:
                 secretKeyRef:
                   key: START_YEAR
                   name: java-bot-secret
+            - name: DATA_DIR
+              valueFrom:
+                secretKeyRef:
+                  key: DATA_DIR
+                  name: java-bot-secret
 
 
       restartPolicy: {{ .Values.restartPolicy }}
