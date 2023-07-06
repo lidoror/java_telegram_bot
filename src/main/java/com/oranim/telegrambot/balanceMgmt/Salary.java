@@ -14,12 +14,12 @@ public class Salary {
 
         if (command.contains("one")) {
             String firstSalary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
-            jsonWorkloads.jsonWriter("First_Salary" , firstSalary , "./data/salary.json");
+            jsonWorkloads.jsonWriter("First_Salary" , firstSalary , "salary.json");
             message.setText("First salary initialized");
 
         } else if (command.contains("two")) {
             String secondSalary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
-            jsonWorkloads.jsonWriter("Second_Salary" , secondSalary , "./data/salary.json");
+            jsonWorkloads.jsonWriter("Second_Salary" , secondSalary , "salary.json");
             message.setText("Second salary initialized");
 
         } else
@@ -28,7 +28,7 @@ public class Salary {
 
     public double getSalaryFromJson(String salary) {
         JsonWorkloads jsonWorkloads = new JsonWorkloads();
-        String salaryToReturn = jsonWorkloads.jsonReader("./data/salary.json").get(salary).toString();
+        String salaryToReturn = jsonWorkloads.jsonReader("salary.json").get(salary).toString();
         return Double.parseDouble(salaryToReturn);
 
     }

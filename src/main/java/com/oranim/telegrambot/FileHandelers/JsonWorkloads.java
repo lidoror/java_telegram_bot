@@ -10,10 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class JsonWorkloads {
-
+    private String dataDir = System.getenv("DATA_DIR");
     public JsonWorkloads(){
 
     }
@@ -22,16 +23,18 @@ public class JsonWorkloads {
      * this method write json file to the file system
      * @param key the key for the json
      * @param val the val of the json
-     * @param fileLocation the location of the json
+     * @param fileName the location of the json
      */
-    public void jsonWriter(String key, String val, String fileLocation){
+    public void jsonWriter(String key, String val, String fileName){
+        String filePath = String.format("%s/%s",dataDir,fileName);
+
         JSONObject jsonObject = new JSONObject();
 
-        if (jsonExist(Path.of(fileLocation))){
-            jsonObject.putAll(jsonReader(fileLocation));
+        if (jsonExist(Path.of(filePath))){
+            jsonObject.putAll(jsonReader(filePath));
         }
 
-        try(FileWriter fileWriter = new FileWriter(fileLocation)) {
+        try(FileWriter fileWriter = new FileWriter(filePath)) {
 
             jsonObject.put(key,val);
             fileWriter.write(jsonObject.toJSONString());
@@ -45,15 +48,16 @@ public class JsonWorkloads {
 
     /**
      * this method read json file from the file system
-     * @param fileLocation the location of the json
+     * @param fileName the location of the json
      * @return the json located in the file system as json object
      */
 
-    public JSONObject jsonReader(String fileLocation )  {
+    public JSONObject jsonReader(String fileName )  {
+        String filePath = String.format("%s/%s",dataDir,fileName);
         JSONParser jsonParser = new JSONParser();
 
         try {
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(fileLocation));
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(filePath));
             BotLogging.setInfoLog(classLog("jsonWriter","readed data from json"));
             return jsonObject;
 
