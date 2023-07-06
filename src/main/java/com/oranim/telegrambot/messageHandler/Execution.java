@@ -35,15 +35,15 @@ public class Execution {
         try {
             // todo getting doc into bot
             boolean messageContainDoc = update.getMessage() != null && update.getMessage().getDocument() != null;
-            if (messageContainDoc ){
+            boolean messageToDB = FunctionsUtils.stringContainNumber(command) && approvedCompaniesList.contains(new CompanyInputExtractor().getInput(command));
+
+
+            if (messageContainDoc ) {
 
             }
-
-            boolean messageToDB = FunctionsUtils.stringContainNumber(command) && approvedCompaniesList.contains(new CompanyInputExtractor().getInput(command));
             if (messageToDB) {
-                if (FunctionsUtils.stringContainNumber(new PriceInputExtractor().getInput(command))) {
-                    FunctionsUtils.inputInsertionAndValidation(command, message, database);
-                }
+                FunctionsUtils.inputInsertionAndValidation(command, message, database);
+                return message;
             }
 
             if (listContainArg(command,messagesWithCallback)){

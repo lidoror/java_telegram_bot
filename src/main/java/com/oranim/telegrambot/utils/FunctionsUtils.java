@@ -1,5 +1,7 @@
 package com.oranim.telegrambot.utils;
 
+import com.oranim.telegrambot.Exception.InputExtractionException;
+import com.oranim.telegrambot.InputExtractor.InputExtractor;
 import com.oranim.telegrambot.InputExtractor.PriceInputExtractor;
 import com.oranim.telegrambot.balanceMgmt.Balance;
 import com.oranim.telegrambot.db.MessagesService;
@@ -21,8 +23,11 @@ public class FunctionsUtils {
 
 
 
-    public static boolean stringContainNumber(String str) {
-        return NumberUtils.isDigits(str);
+    public static boolean stringContainNumber(String str) throws InputExtractionException {
+
+        boolean  inputContainNumber = NumberUtils.isDigits(new PriceInputExtractor().getInput(str) );
+
+        return inputContainNumber;
     }
 
 
@@ -45,7 +50,11 @@ public class FunctionsUtils {
         }
         if (command.equals("monthlyCategory-All")) {
             editedKeyboard =
-                    KeyboardBuilders.createEditMessageInline("All Expenses:\n", inlineKeyboard.listToTransactionInline(messagesService.getExpensesByDates(getCurrentMonth() , getCurrentYear())), update);
+                    KeyboardBuilders.createEditMessageInline
+                            ("All Expenses:\n",
+                                    inlineKeyboard.listToTransactionInline(messagesService.getExpensesByDates(getCurrentMonth(),
+                                    getCurrentYear())),
+                                    update);
         }
 
         if (command.equals("monthlySum-All")) {
