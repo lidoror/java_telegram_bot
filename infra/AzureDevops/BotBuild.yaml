@@ -18,6 +18,7 @@ variables:
 
     REGISTRY_CONNECTION: 'docker hub'
     IMAGE_REPOSITORY: telegram_bot_java
+    REGISTRY_NAME: ***REMOVED***or
 
 
 
@@ -73,17 +74,10 @@ stages:
             - task: Docker@2
               inputs:
                 containerRegistry: '$(REGISTRY_CONNECTION)'
-                repository: '$(IMAGE_REPOSITORY)'
+                repository: '$(REGISTRY_NAME)/$(IMAGE_REPOSITORY)'
                 command: 'push'
                 tags: '$(GIT_COMMIT)'
-            # - task: Docker@2
-            #   inputs:
-            #     containerRegistry: '$(REGISTRY_CONNECTION)'
-            #     repository: '$(IMAGE_REPOSITORY)'
-            #     command: 'buildAndPush'
-            #     Dockerfile: 'infra/Dockerfiles/BotBuild.Dockerfile'
-            #     tags: '$(GIT_COMMIT)'
-                
+
 
 
           
