@@ -9,6 +9,7 @@ trigger:
             - src/main/java/com/oranim/telegrambot/*
             - infra/AzureDevops/BotBuild.yaml
             - infra/helm/TelegramBotJava/*
+            - infra/Dockerfiles/BotBuild.Dockerfile
             - pom.xml
 
 pool:
@@ -61,12 +62,7 @@ stages:
                 targetType: 'inline'
                 script: |
                     GIT_COMMIT=$(git rev-parse --short HEAD)
-                    
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
-                    
-                    #
-                    # set env variable to allow next task to consume
-                    #
                     echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
 
             - task: Docker@2
