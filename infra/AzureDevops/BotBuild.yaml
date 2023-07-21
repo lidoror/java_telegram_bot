@@ -65,13 +65,24 @@ stages:
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
                     echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
 
+
+            - script: docker build -f infra/Dockerfiles/BotBuild.Dockerfile -t $(IMAGE_REGISTRY):$(GIT_COMMIT) .
+              displayName: BuldingDockerImage 
+
+            
             - task: Docker@2
               inputs:
                 containerRegistry: '$(REGISTRY_CONNECTION)'
                 repository: '$(IMAGE_REPOSITORY)'
-                command: 'buildAndPush'
-                Dockerfile: 'infra/Dockerfiles/BotBuild.Dockerfile'
+                command: 'push'
                 tags: '$(GIT_COMMIT)'
+            # - task: Docker@2
+            #   inputs:
+            #     containerRegistry: '$(REGISTRY_CONNECTION)'
+            #     repository: '$(IMAGE_REPOSITORY)'
+            #     command: 'buildAndPush'
+            #     Dockerfile: 'infra/Dockerfiles/BotBuild.Dockerfile'
+            #     tags: '$(GIT_COMMIT)'
                 
 
 
