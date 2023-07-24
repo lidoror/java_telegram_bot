@@ -1,12 +1,11 @@
-package com.oranim.telegrambot.InputExtractor;
+package com.oranim.telegrambot.inputExtractor;
 
-import com.oranim.telegrambot.Exception.UnableToGeneratePriceException;
+import com.oranim.telegrambot.exception.UnableToGeneratePriceException;
 import com.oranim.telegrambot.utils.Const;
-
 import java.util.regex.Pattern;
 
 public class NoteInputExtractor extends InputExtractor{
-    private final Pattern PATTERN = Pattern.compile("\\d+");
+    private final Pattern PATTERN = Pattern.compile(Const.WHOLE_AND_DECIMAL_NUMBER_REGEX);
 
 
     @Override
