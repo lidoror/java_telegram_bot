@@ -1,4 +1,4 @@
-package com.oranim.telegrambot.FileHandelers;
+package com.oranim.telegrambot.filesManager;
 
 import java.io.IOException;
 import java.nio.file.Files;

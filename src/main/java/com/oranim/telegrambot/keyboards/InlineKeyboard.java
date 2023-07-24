@@ -1,6 +1,6 @@
 package com.oranim.telegrambot.keyboards;
 
-import com.oranim.telegrambot.db.ShoppingMgmtRecord;
+import com.oranim.telegrambot.models.ExpensesModel;
 import com.oranim.telegrambot.utils.Const;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -136,14 +136,14 @@ public class InlineKeyboard {
      * @param list of shopping products
      * @return the list as inline keyboard
      */
-    public InlineKeyboardMarkup listToTransactionInline(List<ShoppingMgmtRecord> list) {
+    public InlineKeyboardMarkup listToTransactionInline(List<ExpensesModel> list) {
         InlineKeyboardMarkup monthsMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         List<InlineKeyboardButton> buttons = new ArrayList<>();
 
-        List<String> products = list.stream().map(ShoppingMgmtRecord::product).toList();
-        List<String> prices = list.stream().map(ShoppingMgmtRecord::price).toList();
-        List<Integer> columID = list.stream().map(ShoppingMgmtRecord::columID).toList();
+        List<String> products = list.stream().map(ExpensesModel::product).toList();
+        List<String> prices = list.stream().map(ExpensesModel::price).toList();
+        List<Integer> columID = list.stream().map(ExpensesModel::columID).toList();
 
 
         for (int i = 0; i < list.size(); i++) {
