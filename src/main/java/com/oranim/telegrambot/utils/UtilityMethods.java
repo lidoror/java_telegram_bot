@@ -1,10 +1,13 @@
 package com.oranim.telegrambot.utils;
 
+import com.oranim.telegrambot.inputExtractor.PriceInputExtractor;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListAndMappersUtils {
+public class UtilityMethods {
 
     public String formatNumberMonthsToNames(String month) {
         Map<String,String> monthMapper = new HashMap<>();
@@ -78,6 +81,16 @@ public class ListAndMappersUtils {
                 "showcompany"
 
         );
+    }
+
+    public boolean inputContainNumber(String str) {
+        boolean  inputContainNumber = NumberUtils.isDigits(new PriceInputExtractor().getInput(str) );
+        return inputContainNumber;
+    }
+
+
+    public String approvedCompanyFormatter(List<String> companyList) {
+        return String.valueOf(companyList).replace("[", "").replace("]", "");
     }
 
 
