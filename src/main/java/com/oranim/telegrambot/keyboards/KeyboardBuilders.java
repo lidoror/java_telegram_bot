@@ -15,9 +15,9 @@ public class KeyboardBuilders {
 
     public static EditMessageText createEditMessageInline(String text, InlineKeyboardMarkup inlineKeyboardMarkup, Update update) {
         return EditMessageText.builder().text(text).
-                replyMarkup(inlineKeyboardMarkup).
-                chatId(update.getCallbackQuery().getMessage().getChatId().toString()).
-                messageId(update.getCallbackQuery().getMessage().getMessageId())
+                replyMarkup(inlineKeyboardMarkup)
+                .chatId(update.getCallbackQuery().getMessage().getChatId().toString())
+                .messageId(update.getCallbackQuery().getMessage().getMessageId())
                 .build();
 
     }
