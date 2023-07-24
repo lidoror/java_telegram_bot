@@ -2,8 +2,8 @@ appName: java-telegram-bot
 environment: prod
 namespace: default
 replicas: 1
-imageRegistry: 851330817509.dkr.ecr.us-east-1.amazonaws.com
+imageRegistry: ***REMOVED***or
 imageName: telegram_bot_java
-imageTag: ef370db
+imageTag: 51fa9ff
 restartPolicy: Always
 
