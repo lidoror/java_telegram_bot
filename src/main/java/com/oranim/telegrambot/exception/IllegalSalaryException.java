@@ -1,4 +1,4 @@
-package com.oranim.telegrambot.Exception;
+package com.oranim.telegrambot.exception;
 
 public class IllegalSalaryException extends Exception{
 
