@@ -1,4 +1,4 @@
-package com.oranim.telegrambot.InputExtractor;
+package com.oranim.telegrambot.inputExtractor;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
