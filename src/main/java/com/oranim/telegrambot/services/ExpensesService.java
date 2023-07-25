@@ -65,7 +65,8 @@ public class ExpensesService {
     public String sumMoneySpentCurrentMonth(){
         try {
             return sumMoneySpentInCertainMonth(
-                    dateHandler.getCurrentMonth(), dateHandler.getCurrentMonth()).toString();
+                    dateHandler.getCurrentMonth(), dateHandler.getCurrentYear()).toString();
+
         }catch (SQLException e){
             BotLogging.createLog(LogWarningLevel.WARN, Dispatcher.class.getName(),"sumMoneySpentCurrentMonth",Arrays.toString(e.getStackTrace()));
         }
@@ -164,8 +165,6 @@ public class ExpensesService {
         } else
             message.setText("A problem occurred in data insertion");
     }
-
-
 
 
 }

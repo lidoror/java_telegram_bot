@@ -19,7 +19,6 @@ public class BalanceManager {
 
     public double getBalance() {
         BotLogging.createLog(LogWarningLevel.INFO, BalanceManager.class.getName(), "getBalance", "trying to get balance");
-
         balance = salaryManager.getSalarySum() - Double.parseDouble(
                 expensesService.sumMoneySpentCurrentMonth());
         return balance;

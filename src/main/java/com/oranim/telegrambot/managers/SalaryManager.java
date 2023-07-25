@@ -22,7 +22,7 @@ public class SalaryManager {
         JsonWorkloads jsonWorkloads = new JsonWorkloads();
         return (String) jsonWorkloads.getJson(fileName).get(key);
     }
-
+    //todo preform a check to see if the salary added
     public void generateSalaryFromInput(SendMessage message, String command)  {
         String salary = command.split(Const.SINGLE_SPACE_SEPARATOR)[2];
         String salaryNumber = command.split(Const.SINGLE_SPACE_SEPARATOR)[1];
@@ -33,13 +33,17 @@ public class SalaryManager {
 //            message.setText("Salary initialization failed");
     }
 
-    public Map<String ,String > getAllSalaries(){
+    public Map<String ,String> getAllSalaries(){
         JsonWorkloads jsonWorkloads = new JsonWorkloads();
         return jsonWorkloads.getJson("salary.json");
     }
 
     public double getSalarySum(){
-        return getAllSalaries().values().stream().mapToDouble(Double::parseDouble).sum();
+        return getAllSalaries()
+                .values()
+                .stream()
+                .mapToDouble(Double::parseDouble)
+                .sum();
     }
 
 }
