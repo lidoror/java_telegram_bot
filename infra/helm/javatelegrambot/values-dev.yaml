@@ -4,7 +4,7 @@ namespace: dev
 replicas: 1
 imageRegistry: ***REMOVED***or
 imageName: telegram_bot_java
-imageTag: 51fa9ff
+imageTag: ffe3963
 restartPolicy: Always
 image:
   pullSecret: docker-regcred
