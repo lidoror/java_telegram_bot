@@ -7,3 +7,6 @@ imageName: telegram_bot_java
 imageTag: 51fa9ff
 restartPolicy: Always
 
+image:
+  pullSecret: docker-regcred
+
