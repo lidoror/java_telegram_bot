@@ -18,7 +18,7 @@ spec:
         app.kubernetes/name: {{ .Values.appName }}
     spec:
       imagePullSecrets:
-        - {{ .Values.image.pullSecret }}
+        - name: {{ .Values.image.pullSecret }}
       containers:
         - name: {{ .Values.appName }}
           image: "{{ .Values.imageRegistry }}/{{ .Values.imageName }}:{{ .Values.imageTag }}"
