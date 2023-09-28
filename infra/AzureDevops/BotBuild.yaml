@@ -16,9 +16,9 @@ pool:
     Azure Pipelines
 variables:
 
-    REGISTRY_CONNECTION: 'docker hub'
+    REGISTRY_CONNECTION: 'aws_ecr'
     IMAGE_REPOSITORY: telegram_bot_java
-    REGISTRY_NAME: ***REMOVED***or
+
 
 
 
@@ -67,16 +67,19 @@ stages:
                     echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
 
 
-            - script: docker build -f infra/Dockerfiles/BotBuild.Dockerfile -t $(REGISTRY_NAME)/$(IMAGE_REPOSITORY):$(GIT_COMMIT) .
+            - script: docker build -f infra/Dockerfiles/BotBuild.Dockerfile -t $(IMAGE_REPOSITORY):$(GIT_COMMIT) .
               displayName: BuldingDockerImage 
 
-            
-            - task: Docker@2
+            - task: ECRPushImage@1
               inputs:
-                containerRegistry: '$(REGISTRY_CONNECTION)'
-                repository: '$(REGISTRY_NAME)/$(IMAGE_REPOSITORY)'
-                command: 'push'
-                tags: '$(GIT_COMMIT)'
+                awsCredentials: $(REGISTRY_CONNECTION)
+                regionName: 'us-east-1'
+                imageSource: 'imagename'
+                sourceImageName: '$(IMAGE_REPOSITORY)'
+                sourceImageTag: '$(GIT_COMMIT)'
+                repositoryName: $(IMAGE_REPOSITORY)
+                pushTag: '$(GIT_COMMIT)'
+
 
 
 
